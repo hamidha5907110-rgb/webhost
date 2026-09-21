@@ -1,0 +1,2640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SID Hosting — Telegram Bot &amp; Userbot Hosting</title>
+<meta name="description" content="Deploy Telegram bots and userbots in seconds. Upload a script or log in with a phone number — SID Hosting keeps it running, 24/7.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/motion/10.18.0/motion.js"></script>
+<style>
+:root {
+  --bg: #06070f;
+  --surface: rgba(255,255,255,0.04);
+  --glass: rgba(255,255,255,0.07);
+  --glass-border: rgba(255,255,255,0.10);
+  --glass-hover: rgba(255,255,255,0.12);
+  --accent: #7c6af5;
+  --accent2: #4facfe;
+  --accent3: #00f2c8;
+  --accent4: #f857a6;
+  --gold: #f5c542;
+  --danger: #ff4d6d;
+  --success: #00e676;
+  --warn: #ffba00;
+  --text: #e8eaf0;
+  --text-dim: rgba(232,234,240,0.5);
+  --text-muted: rgba(232,234,240,0.3);
+  --r: 16px;
+  --r-sm: 10px;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  /* product identity hues: bot-hosting = violet, userbot-hosting = teal */
+  --bot-hue: var(--accent);
+  --user-hue: var(--accent3);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
+}
+
+/* ── Aurora Background ── */
+.aurora {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden;
+}
+.aurora-blob {
+  position: absolute; border-radius: 50%; filter: blur(100px); opacity: 0.18;
+  animation: float var(--d, 12s) ease-in-out infinite alternate;
+}
+.aurora-blob:nth-child(1) { width:700px;height:700px;top:-200px;left:-200px;background:var(--accent);--d:14s; }
+.aurora-blob:nth-child(2) { width:500px;height:500px;top:40%;right:-150px;background:var(--accent2);--d:18s; }
+.aurora-blob:nth-child(3) { width:600px;height:600px;bottom:-200px;left:30%;background:var(--accent3);--d:16s;opacity:.12; }
+.aurora-blob:nth-child(4) { width:400px;height:400px;top:20%;left:50%;background:var(--accent4);--d:10s;opacity:.10; }
+@keyframes float {
+  from { transform: translate(0,0) scale(1); }
+  to { transform: translate(40px,60px) scale(1.12); }
+}
+
+/* ── Grid Texture ── */
+body::after {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* ── Layout ── */
+.app { position: relative; z-index: 1; display: flex; min-height: 100vh; }
+
+/* ── Sidebar ── */
+.sidebar {
+  width: 260px; flex-shrink: 0;
+  background: rgba(255,255,255,0.035);
+  border-right: 1px solid var(--glass-border);
+  backdrop-filter: blur(24px);
+  display: flex; flex-direction: column;
+  padding: 28px 16px;
+  position: sticky; top: 0; height: 100vh;
+  overflow-y: auto;
+}
+.sidebar-logo {
+  display: flex; align-items: center; gap: 12px;
+  padding: 0 8px 28px;
+  border-bottom: 1px solid var(--glass-border);
+  margin-bottom: 20px;
+}
+.logo-icon {
+  width: 40px; height: 40px; border-radius: 12px;
+  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px;
+  box-shadow: 0 0 24px rgba(124,106,245,0.5);
+  animation: pulse-glow 3s ease-in-out infinite;
+}
+@keyframes pulse-glow {
+  0%,100% { box-shadow: 0 0 24px rgba(124,106,245,0.5); }
+  50% { box-shadow: 0 0 40px rgba(124,106,245,0.8), 0 0 60px rgba(79,172,254,0.3); }
+}
+.logo-text { font-size: 18px; font-weight: 700; letter-spacing: -0.5px; }
+.logo-text span { color: var(--accent); }
+
+.nav-section-label {
+  font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--text-muted); padding: 0 8px; margin: 16px 0 6px;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px; border-radius: var(--r-sm);
+  color: var(--text-dim); font-size: 14px; font-weight: 500;
+  cursor: pointer; transition: all 0.2s; position: relative;
+  border: 1px solid transparent;
+}
+.nav-item:hover {
+  background: var(--glass); color: var(--text);
+  border-color: var(--glass-border);
+}
+.nav-item.active {
+  background: rgba(124,106,245,0.15);
+  color: var(--accent);
+  border-color: rgba(124,106,245,0.3);
+}
+.nav-item.active::before {
+  content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%);
+  width: 3px; height: 60%; background: var(--accent); border-radius: 0 3px 3px 0;
+}
+.nav-icon { font-size: 16px; width: 20px; text-align: center; }
+.nav-badge {
+  margin-left: auto; font-size: 11px; font-weight: 600;
+  background: rgba(124,106,245,0.25); color: var(--accent);
+  padding: 2px 7px; border-radius: 20px; border: 1px solid rgba(124,106,245,0.3);
+}
+.nav-badge.green {
+  background: rgba(0,230,118,0.15); color: var(--success);
+  border-color: rgba(0,230,118,0.3);
+}
+.nav-badge.red {
+  background: rgba(255,77,109,0.15); color: var(--danger);
+  border-color: rgba(255,77,109,0.3);
+}
+
+.sidebar-footer {
+  margin-top: auto; padding-top: 16px;
+  border-top: 1px solid var(--glass-border);
+}
+.user-card {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: var(--r-sm);
+  background: var(--glass); border: 1px solid var(--glass-border);
+}
+.user-avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent4), var(--accent));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; flex-shrink: 0;
+}
+.user-name { font-size: 13px; font-weight: 600; }
+.user-role { font-size: 11px; color: var(--accent); font-weight: 500; }
+
+/* ── Main ── */
+.main { flex: 1; padding: 32px; overflow-y: auto; }
+.page { display: none; }
+.page.active { display: block; }
+
+/* ── Page Header ── */
+.page-header { margin-bottom: 32px; }
+.page-title {
+  font-size: 28px; font-weight: 700; letter-spacing: -0.8px;
+  background: linear-gradient(90deg, var(--text), var(--text-dim));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.page-subtitle { font-size: 14px; color: var(--text-dim); margin-top: 4px; }
+.page-header-row {
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 12px;
+}
+
+/* ── Status Bar ── */
+.status-bar {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(0,230,118,0.08); border: 1px solid rgba(0,230,118,0.2);
+  padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: 500;
+  color: var(--success);
+}
+.status-dot {
+  width: 7px; height: 7px; border-radius: 50%; background: var(--success);
+  animation: blink 2s ease-in-out infinite;
+}
+@keyframes blink {
+  0%,100% { opacity: 1; box-shadow: 0 0 8px var(--success); }
+  50% { opacity: 0.5; box-shadow: none; }
+}
+
+/* ── Grid ── */
+.grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 24px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 24px; }
+.grid-2 { display: grid; grid-template-columns: repeat(2,1fr); gap: 20px; margin-bottom: 24px; }
+
+/* ── Glass Card ── */
+.card {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r);
+  padding: 20px;
+  backdrop-filter: blur(12px);
+  transition: all 0.3s;
+  position: relative; overflow: hidden;
+}
+.card::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+  pointer-events: none;
+}
+.card:hover {
+  border-color: rgba(255,255,255,0.18);
+  transform: translateY(-2px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+}
+
+/* ── Stat Card ── */
+.stat-card { cursor: default; }
+.stat-label {
+  font-size: 12px; color: var(--text-muted); font-weight: 500;
+  letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 8px;
+  display: flex; align-items: center; gap: 6px;
+}
+.stat-value {
+  font-size: 32px; font-weight: 700; letter-spacing: -1px;
+  line-height: 1;
+}
+.stat-delta {
+  font-size: 12px; margin-top: 6px; display: flex; align-items: center; gap: 4px;
+}
+.delta-up { color: var(--success); }
+.delta-down { color: var(--danger); }
+.stat-icon {
+  position: absolute; top: 16px; right: 16px;
+  font-size: 28px; opacity: 0.15;
+}
+.accent-bar {
+  position: absolute; bottom: 0; left: 0; height: 3px;
+  border-radius: 0 0 0 var(--r);
+  animation: bar-shimmer 3s ease-in-out infinite;
+}
+@keyframes bar-shimmer {
+  0%,100% { opacity: 0.7; } 50% { opacity: 1; }
+}
+
+/* ── Script Runner ── */
+.script-list { display: flex; flex-direction: column; gap: 10px; }
+.script-item {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--glass); border: 1px solid var(--glass-border);
+  border-radius: var(--r-sm); padding: 14px 16px;
+  transition: all 0.25s; cursor: default;
+}
+.script-item:hover {
+  border-color: rgba(255,255,255,0.15);
+  background: var(--glass-hover);
+}
+.script-status-dot {
+  width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+  transition: all 0.3s;
+}
+.dot-running { background: var(--success); box-shadow: 0 0 10px var(--success); animation: blink 1.5s infinite; }
+.dot-stopped { background: var(--danger); }
+.dot-pending { background: var(--warn); animation: blink 1s infinite; }
+
+.script-info { flex: 1; min-width: 0; }
+.script-name { font-size: 14px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.script-meta { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+
+.script-actions { display: flex; gap: 8px; flex-shrink: 0; }
+.btn-icon {
+  width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--glass-border);
+  background: var(--glass); cursor: pointer;
+  display: flex; align-items: center; justify-content: center; font-size: 14px;
+  transition: all 0.2s; color: var(--text-dim);
+}
+.btn-icon:hover { background: var(--glass-hover); color: var(--text); border-color: rgba(255,255,255,0.2); transform: scale(1.08); }
+.btn-icon.run { color: var(--success); border-color: rgba(0,230,118,0.3); }
+.btn-icon.stop { color: var(--danger); border-color: rgba(255,77,109,0.3); }
+.btn-icon.del { color: var(--text-muted); }
+.btn-icon.del:hover { color: var(--danger); }
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 20px; border-radius: 10px; font-size: 14px; font-weight: 600;
+  cursor: pointer; transition: all 0.2s; border: 1px solid transparent;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), #5a52d5);
+  color: #fff; border-color: rgba(124,106,245,0.4);
+  box-shadow: 0 4px 20px rgba(124,106,245,0.35);
+}
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 30px rgba(124,106,245,0.5); }
+.btn-secondary {
+  background: var(--glass); color: var(--text);
+  border-color: var(--glass-border);
+}
+.btn-secondary:hover { background: var(--glass-hover); border-color: rgba(255,255,255,0.18); }
+.btn-danger {
+  background: rgba(255,77,109,0.12); color: var(--danger);
+  border-color: rgba(255,77,109,0.3);
+}
+.btn-danger:hover { background: rgba(255,77,109,0.2); }
+.btn-success {
+  background: rgba(0,230,118,0.12); color: var(--success);
+  border-color: rgba(0,230,118,0.3);
+}
+.btn-success:hover { background: rgba(0,230,118,0.2); }
+
+/* ── Section Header ── */
+.section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px;
+}
+.section-title { font-size: 16px; font-weight: 700; letter-spacing: -0.3px; }
+.section-title small { font-size: 12px; color: var(--text-muted); font-weight: 400; margin-left: 8px; }
+
+/* ── Upload Zone ── */
+.upload-zone {
+  border: 2px dashed var(--glass-border); border-radius: var(--r);
+  padding: 48px 24px; text-align: center; cursor: pointer;
+  transition: all 0.3s; position: relative; overflow: hidden;
+}
+.upload-zone:hover, .upload-zone.drag-over {
+  border-color: var(--accent);
+  background: rgba(124,106,245,0.05);
+}
+.upload-zone .upload-icon { font-size: 44px; margin-bottom: 12px; display: block; }
+.upload-zone .upload-text { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+.upload-zone .upload-sub { font-size: 13px; color: var(--text-dim); }
+.upload-zone input[type=file] { display: none; }
+.file-types { display: flex; gap: 8px; justify-content: center; margin-top: 16px; }
+.file-badge {
+  font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px;
+  background: var(--glass); border: 1px solid var(--glass-border); color: var(--text-dim);
+}
+
+/* ── Log Terminal ── */
+.terminal {
+  background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--r); padding: 16px; font-family: 'Fira Code', 'Courier New', monospace;
+  font-size: 12px; color: #a8d8a8; min-height: 200px; max-height: 320px;
+  overflow-y: auto; line-height: 1.8;
+}
+.terminal-header {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border);
+  border-bottom: none; border-radius: var(--r) var(--r) 0 0;
+  padding: 10px 16px;
+}
+.term-dot { width: 12px; height: 12px; border-radius: 50%; }
+.log-info { color: #7fd3f7; }
+.log-success { color: #56d364; }
+.log-warn { color: #e3b341; }
+.log-error { color: #f85149; }
+.log-dim { color: #5e6472; }
+
+/* ── Progress Bar ── */
+.progress-wrap { background: rgba(255,255,255,0.06); border-radius: 4px; height: 6px; overflow: hidden; }
+.progress-bar {
+  height: 100%; border-radius: 4px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  transition: width 1s ease;
+  animation: shimmer 2s infinite;
+}
+@keyframes shimmer {
+  0% { background-position: -200px 0; }
+  100% { background-position: 200px 0; }
+}
+
+/* ── Subscription Table ── */
+.table-wrapper { overflow-x: auto; border-radius: var(--r); border: 1px solid var(--glass-border); }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+thead { background: rgba(255,255,255,0.05); }
+th { padding: 12px 16px; text-align: left; font-size: 11px; font-weight: 600; letter-spacing: 0.8px; text-transform: uppercase; color: var(--text-muted); white-space: nowrap; }
+td { padding: 12px 16px; border-top: 1px solid rgba(255,255,255,0.04); }
+tbody tr { transition: background 0.2s; }
+tbody tr:hover { background: rgba(255,255,255,0.03); }
+
+/* ── Tag / Badge ── */
+.tag {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px;
+}
+.tag-active { background: rgba(0,230,118,0.12); color: var(--success); border: 1px solid rgba(0,230,118,0.25); }
+.tag-expired { background: rgba(255,77,109,0.12); color: var(--danger); border: 1px solid rgba(255,77,109,0.25); }
+.tag-free { background: rgba(255,255,255,0.06); color: var(--text-dim); border: 1px solid var(--glass-border); }
+.tag-admin { background: rgba(245,197,66,0.12); color: var(--gold); border: 1px solid rgba(245,197,66,0.25); }
+.tag-owner { background: rgba(248,87,166,0.12); color: var(--accent4); border: 1px solid rgba(248,87,166,0.25); }
+
+/* ── Metric Chart ── */
+.mini-chart { height: 60px; display: flex; align-items: flex-end; gap: 3px; padding-top: 8px; }
+.chart-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.chart-bar-bg { width: 100%; background: rgba(255,255,255,0.06); border-radius: 3px; position: relative; overflow: hidden; }
+.chart-bar-fill {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  border-radius: 3px; transition: height 1s cubic-bezier(.2,.8,.4,1);
+  background: linear-gradient(0deg, var(--accent), var(--accent2));
+}
+.chart-label { font-size: 9px; color: var(--text-muted); }
+
+/* ── Command Input ── */
+.cmd-input-wrap {
+  display: flex; gap: 10px; align-items: center;
+}
+.cmd-input {
+  flex: 1; background: rgba(0,0,0,0.4); border: 1px solid var(--glass-border);
+  border-radius: 10px; padding: 12px 16px; color: var(--text);
+  font-family: 'Fira Code', monospace; font-size: 13px; outline: none;
+  transition: border-color 0.2s;
+}
+.cmd-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(124,106,245,0.15); }
+.cmd-input::placeholder { color: var(--text-muted); }
+
+/* ── Toast ── */
+#toast-container {
+  position: fixed; top: 24px; right: 24px; z-index: 9999;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.toast {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(20,20,35,0.95); backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border); border-radius: 10px;
+  padding: 12px 16px; font-size: 13px; font-weight: 500;
+  min-width: 280px; max-width: 360px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  animation: toast-in 0.3s cubic-bezier(.2,.8,.4,1);
+}
+@keyframes toast-in { from { opacity:0; transform:translateX(20px); } }
+.toast-icon { font-size: 18px; flex-shrink: 0; }
+
+/* ── Speed Gauge ── */
+.speed-gauge {
+  display: flex; flex-direction: column; align-items: center; padding: 20px;
+}
+.gauge-track {
+  width: 160px; height: 80px; position: relative; margin-bottom: 12px;
+}
+.gauge-svg { overflow: visible; }
+.gauge-arc { transition: stroke-dashoffset 1.5s cubic-bezier(.2,.8,.4,1); }
+
+/* ── Modal Overlay ── */
+.modal-overlay {
+  display: none; position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,0.6); backdrop-filter: blur(6px);
+  align-items: center; justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: rgba(14,16,28,0.96); border: 1px solid var(--glass-border);
+  border-radius: 20px; padding: 32px; width: 100%; max-width: 480px;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.7);
+  animation: modal-in 0.3s cubic-bezier(.2,.8,.4,1);
+  backdrop-filter: blur(24px);
+}
+@keyframes modal-in { from { opacity:0; transform:scale(.94) translateY(12px); } }
+.modal-title { font-size: 20px; font-weight: 700; margin-bottom: 20px; }
+.modal-field { margin-bottom: 16px; }
+.modal-label { font-size: 12px; color: var(--text-dim); font-weight: 500; margin-bottom: 6px; }
+.modal-input {
+  width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border);
+  border-radius: 10px; padding: 10px 14px; color: var(--text);
+  font-size: 14px; outline: none; transition: border-color 0.2s;
+}
+.modal-input:focus { border-color: var(--accent); }
+.modal-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; }
+
+/* ── Lock Banner ── */
+.lock-banner {
+  display: flex; align-items: center; gap: 14px;
+  background: rgba(255,186,0,0.08); border: 1px solid rgba(255,186,0,0.25);
+  border-radius: var(--r); padding: 16px 20px; margin-bottom: 24px;
+  animation: border-pulse 2s ease-in-out infinite;
+}
+@keyframes border-pulse {
+  0%,100% { border-color: rgba(255,186,0,0.25); }
+  50% { border-color: rgba(255,186,0,0.5); }
+}
+.lock-icon { font-size: 24px; }
+.lock-text { flex: 1; }
+.lock-title { font-weight: 700; color: var(--warn); font-size: 14px; }
+.lock-sub { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+
+/* ── Broadcast ── */
+.broadcast-area {
+  width: 100%; background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border);
+  border-radius: var(--r); padding: 14px; color: var(--text);
+  font-size: 14px; outline: none; min-height: 120px; resize: vertical;
+  transition: border-color 0.2s; line-height: 1.6;
+}
+.broadcast-area:focus { border-color: var(--accent); }
+
+/* ── Tooltip ── */
+[data-tip] { position: relative; }
+[data-tip]::after {
+  content: attr(data-tip); position: absolute; bottom: calc(100% + 6px); left: 50%;
+  transform: translateX(-50%); background: rgba(14,16,28,0.95); color: var(--text);
+  font-size: 11px; white-space: nowrap; padding: 4px 8px; border-radius: 6px;
+  border: 1px solid var(--glass-border); pointer-events: none;
+  opacity: 0; transition: opacity 0.2s; z-index: 100;
+}
+[data-tip]:hover::after { opacity: 1; }
+
+/* ── Animations ── */
+.fade-in { animation: fade-in 0.5s ease both; }
+@keyframes fade-in { from { opacity:0; transform:translateY(12px); } }
+.fade-in-d1 { animation-delay: 0.1s; }
+.fade-in-d2 { animation-delay: 0.2s; }
+.fade-in-d3 { animation-delay: 0.3s; }
+.fade-in-d4 { animation-delay: 0.4s; }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 4px; }
+
+/* ── Responsive ── */
+@media (max-width: 1100px) { .grid-4 { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 900px) {
+  .sidebar { width: 220px; }
+  .grid-3 { grid-template-columns: repeat(2,1fr); }
+}
+@media (max-width: 700px) {
+  .app { flex-direction: column; }
+  .sidebar { width: 100%; height: auto; position: static; flex-direction: row; flex-wrap: wrap; padding: 12px; }
+  .sidebar-logo { border: none; padding-bottom: 0; margin-bottom: 0; }
+  .grid-2,.grid-3,.grid-4 { grid-template-columns: 1fr; }
+  .main { padding: 16px; }
+}
+
+/* ── Running orbs ── */
+.orb-container { position: fixed; pointer-events: none; z-index: 0; inset: 0; }
+.orb {
+  position: absolute; border-radius: 50%; pointer-events: none;
+  animation: orb-drift var(--od, 20s) ease-in-out infinite alternate;
+}
+@keyframes orb-drift {
+  from { transform: translate(0,0); }
+  to { transform: translate(var(--tx, 60px), var(--ty, 80px)); }
+}
+
+/* ══════════════════════════════════════════════════════════
+   SITE (landing) VIEW
+   ══════════════════════════════════════════════════════════ */
+#app-view { display: none; }
+.site-view { position: relative; z-index: 1; }
+.site-wrap { max-width: 1180px; margin: 0 auto; padding: 0 32px; }
+@media (max-width: 700px) { .site-wrap { padding: 0 20px; } }
+
+/* ── Site nav ── */
+.site-nav {
+  position: sticky; top: 0; z-index: 500;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 32px;
+  background: rgba(6,7,15,0.7); backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--glass-border);
+}
+.site-nav .brand { display: flex; align-items: center; gap: 10px; font-family: var(--font-display); font-weight: 700; font-size: 17px; }
+.site-nav .brand .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--success); box-shadow: 0 0 8px var(--success); animation: blink 2s infinite; }
+.site-nav .brand span { color: var(--accent); }
+.site-links { display: flex; align-items: center; gap: 30px; }
+.site-links a { color: var(--text-dim); text-decoration: none; font-size: 14px; font-weight: 500; transition: color 0.2s; }
+.site-links a:hover { color: var(--text); }
+@media (max-width: 780px) { .site-links a.hide-mobile { display: none; } }
+
+/* ── Hero ── */
+.hero { padding: 88px 0 64px; display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 56px; align-items: center; }
+@media (max-width: 900px) { .hero { grid-template-columns: 1fr; padding: 48px 0 40px; gap: 40px; } }
+.hero-eyebrow-row { display: flex; gap: 10px; margin-bottom: 22px; flex-wrap: wrap; }
+.hero-pill {
+  display: inline-flex; align-items: center; gap: 7px;
+  background: var(--glass); border: 1px solid var(--glass-border);
+  padding: 6px 13px; border-radius: 20px; font-size: 12px; font-weight: 500; color: var(--text-dim);
+}
+.hero-pill b { color: var(--text); font-weight: 700; }
+.hero h1 {
+  font-family: var(--font-display); font-weight: 700;
+  font-size: clamp(34px, 4.6vw, 58px); line-height: 1.06; letter-spacing: -1.4px;
+  margin-bottom: 22px; max-width: 15ch;
+}
+.hero h1 .grad {
+  background: linear-gradient(100deg, var(--accent) 10%, var(--accent3) 55%, var(--accent2) 90%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.hero p.lede { font-size: 17px; line-height: 1.65; color: var(--text-dim); max-width: 46ch; margin-bottom: 32px; }
+.hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 40px; }
+.btn-lg { padding: 14px 26px; font-size: 15px; border-radius: 13px; }
+.hero-stats { display: flex; gap: 34px; flex-wrap: wrap; }
+.hero-stat b { font-family: var(--font-display); font-size: 24px; font-weight: 700; display: block; }
+.hero-stat span { font-size: 12px; color: var(--text-muted); }
+
+/* ── Hero phone / live chat mockup ── */
+.phone-shell {
+  background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.02));
+  border: 1px solid var(--glass-border); border-radius: 26px; padding: 6px;
+  box-shadow: 0 40px 90px rgba(0,0,0,0.55), 0 0 0 1px rgba(255,255,255,0.03) inset;
+  backdrop-filter: blur(20px); max-width: 380px; margin: 0 auto;
+}
+.phone-screen { background: #0a0c18; border-radius: 20px; overflow: hidden; }
+.tg-topbar {
+  display: flex; align-items: center; gap: 10px; padding: 14px 16px;
+  background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.tg-avatar {
+  width: 34px; height: 34px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--accent), var(--accent3));
+  display: flex; align-items: center; justify-content: center; font-size: 15px;
+}
+.tg-topbar-name { font-size: 13.5px; font-weight: 600; }
+.tg-topbar-sub { font-size: 11px; color: var(--success); }
+.tg-chat { padding: 18px 14px; min-height: 340px; display: flex; flex-direction: column; gap: 10px; justify-content: flex-end; }
+.tg-bubble {
+  max-width: 82%; padding: 9px 13px; border-radius: 14px; font-size: 13px; line-height: 1.5;
+  opacity: 0; transform: translateY(8px) scale(.98);
+  animation: bubble-in 0.4s cubic-bezier(.2,.8,.4,1) forwards;
+}
+@keyframes bubble-in { to { opacity: 1; transform: translateY(0) scale(1); } }
+.tg-bubble.out { align-self: flex-end; background: linear-gradient(135deg, var(--accent), #5a52d5); border-bottom-right-radius: 4px; }
+.tg-bubble.in { align-self: flex-start; background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.06); border-bottom-left-radius: 4px; }
+.tg-bubble code { font-family: var(--font-mono); background: rgba(0,0,0,0.3); padding: 1px 5px; border-radius: 4px; font-size: 11.5px; }
+.tg-typing { align-self: flex-start; display: flex; gap: 4px; padding: 10px 14px; background: rgba(255,255,255,0.07); border-radius: 14px; border-bottom-left-radius: 4px; opacity: 0; animation: bubble-in 0.3s forwards; }
+.tg-typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--text-dim); animation: typing-dot 1.2s infinite ease-in-out; }
+.tg-typing i:nth-child(2) { animation-delay: .15s; } .tg-typing i:nth-child(3) { animation-delay: .3s; }
+@keyframes typing-dot { 0%,60%,100% { transform: translateY(0); opacity: .4; } 30% { transform: translateY(-4px); opacity: 1; } }
+.tg-inline-kb { display: grid; gap: 6px; margin-top: 6px; opacity: 0; animation: bubble-in 0.4s forwards; }
+.tg-inline-kb.cols-2 { grid-template-columns: 1fr 1fr; }
+.tg-btn {
+  position: relative; overflow: hidden; cursor: pointer; user-select: none;
+  background: rgba(124,106,245,0.14); border: 1px solid rgba(124,106,245,0.35);
+  color: #cfc8ff; font-size: 12.5px; font-weight: 600; padding: 9px 10px; border-radius: 9px;
+  text-align: center; transition: transform .12s ease, background .2s ease;
+}
+.tg-btn:hover { background: rgba(124,106,245,0.24); }
+.tg-btn:active, .tg-btn.pressed { transform: scale(0.94); background: rgba(124,106,245,0.34); }
+.tg-btn.teal { background: rgba(0,242,200,0.12); border-color: rgba(0,242,200,0.32); color: #a8fff0; }
+.tg-btn.teal:active, .tg-btn.teal.pressed { background: rgba(0,242,200,0.28); }
+.tg-btn .ripple {
+  position: absolute; border-radius: 50%; background: rgba(255,255,255,0.5);
+  transform: scale(0); animation: ripple-out .5s ease-out forwards; pointer-events: none;
+}
+@keyframes ripple-out { to { transform: scale(3.2); opacity: 0; } }
+.tg-hint { text-align: center; font-size: 10.5px; color: var(--text-muted); padding: 8px 0 2px; }
+
+/* ── Product split (Bot Hosting / Userbot Hosting) ── */
+.section { padding: 64px 0; }
+.section-lead { max-width: 60ch; margin-bottom: 40px; }
+.section-lead h2 { font-family: var(--font-display); font-size: clamp(26px,3vw,36px); font-weight: 700; letter-spacing: -0.8px; margin-bottom: 12px; }
+.section-lead p { color: var(--text-dim); font-size: 15.5px; line-height: 1.6; }
+.products-split { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+@media (max-width: 820px) { .products-split { grid-template-columns: 1fr; } }
+.product-panel {
+  border-radius: 22px; padding: 32px; position: relative; overflow: hidden;
+  border: 1px solid var(--glass-border); backdrop-filter: blur(16px);
+  transition: transform .3s ease, border-color .3s ease;
+}
+.product-panel:hover { transform: translateY(-4px); }
+.product-panel.bot { background: linear-gradient(155deg, rgba(124,106,245,0.14), rgba(124,106,245,0.02) 60%); }
+.product-panel.bot:hover { border-color: rgba(124,106,245,0.4); }
+.product-panel.user { background: linear-gradient(155deg, rgba(0,242,200,0.13), rgba(0,242,200,0.02) 60%); }
+.product-panel.user:hover { border-color: rgba(0,242,200,0.4); }
+.product-panel .p-icon { width: 50px; height: 50px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 20px; }
+.product-panel.bot .p-icon { background: rgba(124,106,245,0.2); }
+.product-panel.user .p-icon { background: rgba(0,242,200,0.2); }
+.product-panel h3 { font-family: var(--font-display); font-size: 21px; font-weight: 700; margin-bottom: 10px; }
+.product-panel p.desc { color: var(--text-dim); font-size: 14px; line-height: 1.6; margin-bottom: 22px; }
+.product-panel ul { list-style: none; display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+.product-panel li { display: flex; align-items: baseline; gap: 9px; font-size: 13.5px; color: var(--text); }
+.product-panel li::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: currentColor; flex-shrink: 0; transform: translateY(-2px); }
+.product-panel.bot li::before { color: var(--accent); }
+.product-panel.user li::before { color: var(--accent3); }
+.product-panel .p-stat { font-size: 12px; color: var(--text-muted); border-top: 1px solid var(--glass-border); padding-top: 16px; }
+.product-panel .p-stat b { color: var(--text); font-family: var(--font-mono); }
+
+/* ── Steps ── */
+.steps-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; position: relative; }
+@media (max-width: 780px) { .steps-row { grid-template-columns: 1fr; } }
+.step-card { position: relative; padding: 26px 22px; }
+.step-num {
+  font-family: var(--font-display); font-size: 13px; font-weight: 700; color: var(--accent);
+  background: rgba(124,106,245,0.14); width: 30px; height: 30px; border-radius: 9px;
+  display: flex; align-items: center; justify-content: center; margin-bottom: 16px;
+}
+.step-card h4 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+.step-card p { font-size: 13.5px; color: var(--text-dim); line-height: 1.6; }
+
+/* ── Feature grid (asymmetric) ── */
+.feat-grid { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 150px; gap: 16px; }
+@media (max-width: 900px) { .feat-grid { grid-template-columns: repeat(2,1fr); grid-auto-rows: 160px; } }
+@media (max-width: 560px) { .feat-grid { grid-template-columns: 1fr; grid-auto-rows: auto; } }
+.feat-tile { padding: 22px; display: flex; flex-direction: column; justify-content: space-between; }
+.feat-tile.wide { grid-column: span 2; grid-row: span 2; }
+@media (max-width: 900px) { .feat-tile.wide { grid-column: span 2; } }
+@media (max-width: 560px) { .feat-tile.wide { grid-column: span 1; } }
+.feat-tile .f-ic { font-size: 22px; opacity: .85; }
+.feat-tile h5 { font-size: 14.5px; font-weight: 700; margin-top: auto; }
+.feat-tile p { font-size: 12.5px; color: var(--text-dim); margin-top: 6px; line-height: 1.5; }
+.feat-tile.wide h5 { font-size: 19px; }
+.feat-tile.wide p { font-size: 13.5px; max-width: 40ch; }
+
+/* ── Pricing ── */
+.pricing-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; align-items: stretch; }
+@media (max-width: 820px) { .pricing-row { grid-template-columns: 1fr; } }
+.price-card { padding: 30px 26px; display: flex; flex-direction: column; }
+.price-card.hi { border-color: rgba(245,197,66,0.4); background: linear-gradient(160deg, rgba(245,197,66,0.1), rgba(255,255,255,0.03)); transform: scale(1.03); box-shadow: 0 24px 60px rgba(245,197,66,0.12); }
+@media (max-width: 820px) { .price-card.hi { transform: none; } }
+.price-name { font-size: 13px; font-weight: 700; text-transform: none; color: var(--text-dim); margin-bottom: 6px; }
+.price-amt { font-family: var(--font-display); font-size: 34px; font-weight: 700; margin-bottom: 4px; }
+.price-amt span { font-size: 13px; color: var(--text-muted); font-family: var(--font-body); font-weight: 500; }
+.price-sub { font-size: 12.5px; color: var(--text-muted); margin-bottom: 22px; }
+.price-card ul { list-style: none; display: flex; flex-direction: column; gap: 11px; margin-bottom: 26px; flex: 1; }
+.price-card li { font-size: 13.5px; display: flex; gap: 9px; align-items: baseline; color: var(--text-dim); }
+.price-card li b { color: var(--text); font-weight: 600; }
+.price-card li::before { content: '✓'; color: var(--success); font-weight: 700; }
+
+/* ── Footer ── */
+.site-footer { border-top: 1px solid var(--glass-border); padding: 40px 0 60px; }
+.footer-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+.footer-row .brand { font-family: var(--font-display); font-weight: 700; }
+.footer-links { display: flex; gap: 22px; }
+.footer-links a { color: var(--text-dim); font-size: 13px; text-decoration: none; }
+.footer-links a:hover { color: var(--text); }
+.footer-fine { font-size: 12px; color: var(--text-muted); margin-top: 20px; }
+
+/* ── App-view "back to site" ── */
+.back-to-site {
+  display: inline-flex; align-items: center; gap: 8px; font-size: 12.5px;
+  color: var(--text-dim); cursor: pointer; margin-bottom: 14px; transition: color .2s;
+}
+.back-to-site:hover { color: var(--text); }
+
+/* ══════════════════════════════════════════════════════════
+   USERBOT (dashboard) COMPONENTS
+   ══════════════════════════════════════════════════════════ */
+.userbot-card {
+  display: flex; align-items: center; gap: 14px;
+  background: var(--glass); border: 1px solid var(--glass-border);
+  border-radius: var(--r-sm); padding: 14px 16px; transition: all .25s;
+}
+.userbot-card:hover { border-color: rgba(0,242,200,0.3); background: var(--glass-hover); }
+.userbot-avatar {
+  width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--accent3), var(--accent2));
+  display: flex; align-items: center; justify-content: center; font-size: 16px; color: #04211c; font-weight: 700;
+}
+.userbot-info { flex: 1; min-width: 0; }
+.userbot-phone { font-size: 14px; font-weight: 600; font-family: var(--font-mono); }
+.userbot-meta { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+.userbot-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+/* ── Login stepper ── */
+.login-steps { display: flex; align-items: center; gap: 8px; margin-bottom: 26px; }
+.login-step-dot {
+  width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; background: rgba(255,255,255,0.06); color: var(--text-muted);
+  border: 1px solid var(--glass-border); transition: all .3s;
+}
+.login-step-dot.active { background: rgba(0,242,200,0.18); color: var(--accent3); border-color: rgba(0,242,200,0.4); }
+.login-step-dot.done { background: var(--accent3); color: #04211c; border-color: var(--accent3); }
+.login-step-line { flex: 1; height: 1px; background: var(--glass-border); }
+
+/* ── OTP boxes ── */
+.otp-row { display: flex; gap: 9px; justify-content: center; margin: 22px 0 10px; }
+.otp-box {
+  width: 44px; height: 52px; text-align: center; font-size: 20px; font-weight: 700;
+  font-family: var(--font-mono); background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border);
+  border-radius: 10px; color: var(--text); outline: none; transition: all .2s;
+}
+.otp-box:focus { border-color: var(--accent3); box-shadow: 0 0 0 3px rgba(0,242,200,0.15); }
+.otp-box.filled { border-color: rgba(0,242,200,0.4); }
+
+/* ── Toggle switch ── */
+.toggle-row { display: flex; align-items: center; justify-content: space-between; padding: 13px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.toggle-row:last-child { border-bottom: none; }
+.toggle-row-label { font-size: 13.5px; font-weight: 600; }
+.toggle-row-sub { font-size: 11.5px; color: var(--text-dim); margin-top: 2px; }
+.switch { position: relative; width: 44px; height: 24px; flex-shrink: 0; cursor: pointer; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.switch-track { position: absolute; inset: 0; background: rgba(255,255,255,0.12); border-radius: 20px; transition: .25s; }
+.switch-track::before { content:''; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: .25s; }
+.switch input:checked + .switch-track { background: linear-gradient(135deg, var(--accent3), var(--accent2)); }
+.switch input:checked + .switch-track::before { transform: translateX(20px); }
+
+/* success check animation for completed login */
+.success-ring {
+  width: 84px; height: 84px; border-radius: 50%; margin: 8px auto 20px;
+  display: flex; align-items: center; justify-content: center; font-size: 38px;
+  background: rgba(0,230,118,0.14); border: 2px solid var(--success);
+  animation: success-pop .5s cubic-bezier(.2,.9,.3,1.4);
+}
+@keyframes success-pop { from { transform: scale(0.5); opacity: 0; } }
+</style>
+</head>
+<body>
+
+<!-- Aurora background -->
+<div class="aurora">
+  <div class="aurora-blob"></div>
+  <div class="aurora-blob"></div>
+  <div class="aurora-blob"></div>
+  <div class="aurora-blob"></div>
+</div>
+
+<div id="toast-container"></div>
+
+<!-- ══════════════════════════════════════════════════════════
+     SITE VIEW — public landing page
+     ══════════════════════════════════════════════════════════ -->
+<div class="site-view" id="site-view">
+
+  <nav class="site-nav">
+    <div class="brand"><span class="dot"></span>SID <span>Hosting</span></div>
+    <div class="site-links">
+      <a href="#products" class="hide-mobile">Bot Hosting</a>
+      <a href="#products" class="hide-mobile">Userbot Hosting</a>
+      <a href="#pricing" class="hide-mobile">Pricing</a>
+      <a href="https://t.me/+5uCnxp3U1gMwZjQ1" class="hide-mobile" target="_blank" rel="noopener">Updates</a>
+      <button class="btn btn-primary" onclick="showApp()">Open Dashboard</button>
+    </div>
+  </nav>
+
+  <div class="site-wrap">
+    <section class="hero">
+      <div>
+        <div class="hero-eyebrow-row">
+          <span class="hero-pill">🟣 <b>Bot hosting</b> for .py / .js scripts</span>
+          <span class="hero-pill">🟢 <b>Userbot hosting</b> via phone login</span>
+        </div>
+        <h1>Two ways to run<br>on Telegram, <span class="grad">one control panel</span></h1>
+        <p class="lede">Upload a bot script and we keep it alive — or log in with a phone number and we run a full-featured userbot on your account. Malware-scanned uploads, live logs, and one-tap start/stop, all in a panel that feels like Telegram itself.</p>
+        <div class="hero-ctas">
+          <button class="btn btn-primary btn-lg" onclick="showApp()">Open Dashboard</button>
+          <button class="btn btn-secondary btn-lg" onclick="document.getElementById('products').scrollIntoView({behavior:'smooth'})">See how it works</button>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><b id="hs-bots">—</b><span>Scripts hosted</span></div>
+          <div class="hero-stat"><b id="hs-userbots">—</b><span>Userbot slots live</span></div>
+          <div class="hero-stat"><b id="hs-uptime">—</b><span>Uptime, last 30d</span></div>
+        </div>
+      </div>
+
+      <div class="phone-shell">
+        <div class="phone-screen">
+          <div class="tg-topbar">
+            <div class="tg-avatar">🤖</div>
+            <div>
+              <div class="tg-topbar-name">SID Hosting</div>
+              <div class="tg-topbar-sub">online</div>
+            </div>
+          </div>
+          <div class="tg-chat" id="hero-chat"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="products">
+      <div class="section-lead">
+        <h2>Pick your kind of bot</h2>
+        <p>Both run on the same infrastructure and the same dashboard — the difference is what you hand over: a script, or a phone number.</p>
+      </div>
+      <div class="products-split">
+        <div class="product-panel bot">
+          <div class="p-icon">📤</div>
+          <h3>Bot Hosting</h3>
+          <p class="desc">Upload a Python or JS bot — or a zipped project — and it runs as its own process, 24/7. Missing packages install themselves; every upload is scanned before it ever runs.</p>
+          <ul>
+            <li>Auto pip / npm install on first run</li>
+            <li>Malware &amp; executable scan on every upload</li>
+            <li>Live stdout/stderr log streaming</li>
+            <li>One-tap restart if a script crashes</li>
+          </ul>
+          <div class="p-stat">Free plan: <b>10 files</b> · Premium: <b>15 files</b></div>
+        </div>
+        <div class="product-panel user">
+          <div class="p-icon">📱</div>
+          <h3>Userbot Hosting</h3>
+          <p class="desc">Log in with your phone number — the same way Telegram Desktop does it — and we host a userbot on your own account: moderation tools, fun commands, auto-responses, and more.</p>
+          <ul>
+            <li>Standard Telegram login: code, then 2FA if enabled</li>
+            <li>Your session string is yours — revoke anytime</li>
+            <li>Owner-protected: only you can issue commands</li>
+            <li>Restart or log out an account in one tap</li>
+          </ul>
+          <div class="p-stat">Up to <b>50</b> userbot slots per deployment</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-lead">
+        <h2>How it works</h2>
+        <p>Same three steps, whichever side you're on.</p>
+      </div>
+      <div class="steps-row">
+        <div class="card step-card">
+          <div class="step-num">1</div>
+          <h4>Connect</h4>
+          <p>Drop in a script file, or enter your phone number and confirm the login code Telegram sends you.</p>
+        </div>
+        <div class="card step-card">
+          <div class="step-num">2</div>
+          <h4>Deploy</h4>
+          <p>We scan, install dependencies, and start the process. You'll see it land in the dashboard within seconds.</p>
+        </div>
+        <div class="card step-card">
+          <div class="step-num">3</div>
+          <h4>Control</h4>
+          <p>Watch live logs, restart on demand, and manage everything from a panel built to feel like Telegram itself.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-lead">
+        <h2>Built for people who live in Telegram</h2>
+        <p>Every feature here maps to something the dashboard actually does — nothing decorative.</p>
+      </div>
+      <div class="feat-grid">
+        <div class="card feat-tile wide">
+          <div class="f-ic">🖥️</div>
+          <div>
+            <h5>Live terminal, not a status page</h5>
+            <p>Logs stream in as your script prints them — filter by success, warning, or error, pause the feed, or send it a command directly.</p>
+          </div>
+        </div>
+        <div class="card feat-tile">
+          <div class="f-ic">🛡️</div>
+          <h5>Malware scanning</h5>
+          <p>Every upload is checked before it runs.</p>
+        </div>
+        <div class="card feat-tile">
+          <div class="f-ic">📢</div>
+          <h5>Broadcast</h5>
+          <p>Message every hosted user at once.</p>
+        </div>
+        <div class="card feat-tile">
+          <div class="f-ic">🔒</div>
+          <h5>Lockdown mode</h5>
+          <p>Freeze new uploads instantly if needed.</p>
+        </div>
+        <div class="card feat-tile">
+          <div class="f-ic">📊</div>
+          <h5>Real usage stats</h5>
+          <p>Messages, commands, and uptime tracked live.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="pricing">
+      <div class="section-lead">
+        <h2>Pricing</h2>
+        <p>Free covers most personal bots. Premium raises the ceiling for both hosting types.</p>
+      </div>
+      <div class="pricing-row">
+        <div class="card price-card">
+          <div class="price-name">Free</div>
+          <div class="price-amt">$0</div>
+          <div class="price-sub">Forever, no card needed</div>
+          <ul>
+            <li>Up to <b>10 hosted files</b></li>
+            <li><b>1</b> userbot slot</li>
+            <li>Live logs &amp; malware scan</li>
+            <li>Community support</li>
+          </ul>
+          <button class="btn btn-secondary" onclick="showApp()">Get started</button>
+        </div>
+        <div class="card price-card hi">
+          <div class="price-name">Premium</div>
+          <div class="price-amt">Ask owner<span> /mo</span></div>
+          <div class="price-sub">Activated by an admin from the dashboard</div>
+          <ul>
+            <li>Up to <b>15 hosted files</b></li>
+            <li><b>Priority</b> userbot slots</li>
+            <li>Faster restart queue</li>
+            <li>Direct support channel</li>
+          </ul>
+          <button class="btn btn-primary" onclick="showApp()">Open dashboard</button>
+        </div>
+        <div class="card price-card">
+          <div class="price-name">Admin</div>
+          <div class="price-amt">Invite-only</div>
+          <div class="price-sub">For the people running the show</div>
+          <ul>
+            <li><b>Unlimited</b> files</li>
+            <li>Up to <b>50</b> userbot slots</li>
+            <li>Broadcast &amp; lockdown controls</li>
+            <li>Full subscription management</li>
+          </ul>
+          <button class="btn btn-secondary" onclick="showApp()">Owner login</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer class="site-footer">
+    <div class="site-wrap footer-row">
+      <div class="brand">SID <span style="color:var(--accent)">Hosting</span></div>
+      <div class="footer-links">
+        <a href="https://t.me/+5uCnxp3U1gMwZjQ1" target="_blank" rel="noopener">Updates channel</a>
+        <a href="#" onclick="showApp();return false;">Dashboard</a>
+        <a href="#pricing">Pricing</a>
+      </div>
+    </div>
+    <div class="site-wrap footer-fine">SID Hosting is an independent hosting panel for Telegram bots and userbots. Not affiliated with Telegram FZ-LLC. Hosting a userbot runs automation on your own Telegram account — use responsibly and within Telegram's Terms of Service.</div>
+  </footer>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════
+     APP VIEW — control panel dashboard
+     ══════════════════════════════════════════════════════════ -->
+<div id="app-view">
+
+<!-- Upload Modal -->
+<div class="modal-overlay" id="upload-modal">
+  <div class="modal">
+    <div class="modal-title">📤 Upload Script</div>
+    <div class="modal-field">
+      <div class="modal-label">Script File (.py or .js)</div>
+      <div class="upload-zone" onclick="document.getElementById('file-picker').click()" id="modal-drop-zone">
+        <input type="file" id="file-picker" accept=".py,.js,.zip" onchange="handleFileSelect(this)">
+        <span class="upload-icon">📂</span>
+        <div class="upload-text">Drop or click to choose file</div>
+        <div class="upload-sub" id="file-name-display">Supports .py .js .zip</div>
+        <div class="file-types">
+          <span class="file-badge">Python</span>
+          <span class="file-badge">JavaScript</span>
+          <span class="file-badge">ZIP Archive</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-field">
+      <div class="modal-label">Auto-install missing packages?</div>
+      <label style="display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px;color:var(--text-dim)">
+        <input type="checkbox" id="auto-install" checked style="accent-color:var(--accent);width:16px;height:16px">
+        Yes — auto-run pip/npm install if module not found
+      </label>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('upload-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="uploadScript()">🚀 Upload & Run</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Subscription Modal -->
+<div class="modal-overlay" id="sub-modal">
+  <div class="modal">
+    <div class="modal-title">💳 Add Subscription</div>
+    <div class="modal-field">
+      <div class="modal-label">User ID</div>
+      <input class="modal-input" type="number" id="sub-uid" placeholder="e.g. 2119464081">
+    </div>
+    <div class="modal-field">
+      <div class="modal-label">Duration (days)</div>
+      <input class="modal-input" type="number" id="sub-days" placeholder="30" value="30">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('sub-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="addSubscription()">✅ Activate</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Admin Modal -->
+<div class="modal-overlay" id="admin-modal">
+  <div class="modal">
+    <div class="modal-title">👑 Promote to Admin</div>
+    <div class="modal-field">
+      <div class="modal-label">User ID</div>
+      <input class="modal-input" type="number" id="admin-uid" placeholder="e.g. 987654321">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('admin-modal')">Cancel</button>
+      <button class="btn btn-success" onclick="addAdmin()">👑 Promote</button>
+    </div>
+  </div>
+</div>
+
+<!-- Add Userbot Account Modal (phone → code → 2FA → done) -->
+<div class="modal-overlay" id="add-account-modal">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-title">📱 Add Telegram Account</div>
+    <div class="login-steps">
+      <div class="login-step-dot" id="lstep-1">1</div>
+      <div class="login-step-line"></div>
+      <div class="login-step-dot" id="lstep-2">2</div>
+      <div class="login-step-line"></div>
+      <div class="login-step-dot" id="lstep-3">3</div>
+    </div>
+
+    <!-- Step 1: phone -->
+    <div id="login-phone-step">
+      <div class="modal-field">
+        <div class="modal-label">Phone Number</div>
+        <input class="modal-input" type="text" id="login-phone" placeholder="+91XXXXXXXXXX" style="font-family:var(--font-mono)">
+        <div style="font-size:11.5px;color:var(--text-muted);margin-top:8px">We'll send a login code from Telegram — same as logging into Telegram Desktop.</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('add-account-modal')">Cancel</button>
+        <button class="btn btn-primary" id="btn-send-code" style="background:linear-gradient(135deg,var(--accent3),var(--accent2))" onclick="loginSendCode()">Send Code</button>
+      </div>
+    </div>
+
+    <!-- Step 2: OTP -->
+    <div id="login-code-step" style="display:none">
+      <div style="text-align:center;font-size:13px;color:var(--text-dim);margin-bottom:4px">Code sent to <b id="login-phone-echo" style="color:var(--text);font-family:var(--font-mono)"></b></div>
+      <div class="otp-row" id="otp-row">
+        <input class="otp-box" maxlength="1" inputmode="numeric">
+        <input class="otp-box" maxlength="1" inputmode="numeric">
+        <input class="otp-box" maxlength="1" inputmode="numeric">
+        <input class="otp-box" maxlength="1" inputmode="numeric">
+        <input class="otp-box" maxlength="1" inputmode="numeric">
+      </div>
+      <div style="text-align:center"><span class="back-to-site" style="margin:0;font-size:12px" onclick="loginSendCode(true)">Resend code</span></div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('add-account-modal')">Cancel</button>
+        <button class="btn btn-primary" style="background:linear-gradient(135deg,var(--accent3),var(--accent2))" onclick="loginVerifyCode()">Verify</button>
+      </div>
+    </div>
+
+    <!-- Step 3: 2FA (only if needed) -->
+    <div id="login-2fa-step" style="display:none">
+      <div class="modal-field">
+        <div class="modal-label">🔒 Two-Step Verification Password</div>
+        <input class="modal-input" type="password" id="login-2fa-pass" placeholder="Your Telegram 2FA password">
+        <div style="font-size:11.5px;color:var(--text-muted);margin-top:8px">This account has Cloud Password enabled. This is never stored — it's only used once to complete sign-in.</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="closeModal('add-account-modal')">Cancel</button>
+        <button class="btn btn-primary" style="background:linear-gradient(135deg,var(--accent3),var(--accent2))" onclick="loginVerify2fa()">Confirm</button>
+      </div>
+    </div>
+
+    <!-- Step 4: success -->
+    <div id="login-done-step" style="display:none;text-align:center">
+      <div class="success-ring">✅</div>
+      <div style="font-weight:700;font-size:16px;margin-bottom:6px">Account deployed</div>
+      <div style="font-size:13px;color:var(--text-dim);margin-bottom:22px">Your userbot is starting up now — it'll appear in the accounts list within a few seconds.</div>
+      <button class="btn btn-primary" style="background:linear-gradient(135deg,var(--accent3),var(--accent2));width:100%" onclick="closeModal('add-account-modal')">Done</button>
+    </div>
+  </div>
+</div>
+
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="back-to-site" onclick="showSite()">← Back to site</div>
+    <div class="sidebar-logo">
+      <div class="logo-icon">🤖</div>
+      <div>
+        <div class="logo-text">SID <span>Hosting</span></div>
+        <div style="font-size:11px;color:var(--text-muted)">v2.6 • Control Panel</div>
+      </div>
+    </div>
+
+    <div class="nav-section-label">Dashboard</div>
+    <div class="nav-item active" onclick="nav('dashboard',this)">
+      <span class="nav-icon">📊</span> Overview
+      <span class="nav-badge green" id="nav-running-count">3</span>
+    </div>
+
+    <div class="nav-section-label">Bot Management</div>
+    <div class="nav-item" onclick="nav('upload',this)">
+      <span class="nav-icon">📤</span> Upload Script
+    </div>
+    <div class="nav-item" onclick="nav('files',this)">
+      <span class="nav-icon">📂</span> Manage Files
+      <span class="nav-badge" id="nav-file-count">5</span>
+    </div>
+    <div class="nav-item" onclick="nav('logs',this)">
+      <span class="nav-icon">🖥️</span> Live Logs
+    </div>
+    <div class="nav-item" onclick="nav('command',this)">
+      <span class="nav-icon">⚡</span> Send Command
+    </div>
+
+    <div class="nav-section-label">Userbot Hosting</div>
+    <div class="nav-item" onclick="nav('userbots',this)">
+      <span class="nav-icon">📱</span> Accounts
+      <span class="nav-badge" style="background:rgba(0,242,200,0.18);color:var(--accent3);border-color:rgba(0,242,200,0.3)" id="nav-userbot-count">2</span>
+    </div>
+    <div class="nav-item" onclick="openModal('add-account-modal');resetLoginFlow()">
+      <span class="nav-icon">➕</span> Add Account
+    </div>
+
+    <div class="nav-section-label">Admin Tools</div>
+    <div class="nav-item" onclick="nav('subscriptions',this)">
+      <span class="nav-icon">💳</span> Subscriptions
+      <span class="nav-badge" id="nav-sub-count">12</span>
+    </div>
+    <div class="nav-item" onclick="nav('admins',this)">
+      <span class="nav-icon">👑</span> Admins
+    </div>
+    <div class="nav-item" onclick="nav('broadcast',this)">
+      <span class="nav-icon">📢</span> Broadcast
+    </div>
+    <div class="nav-item" onclick="nav('security',this)">
+      <span class="nav-icon">🔒</span> Security
+    </div>
+    <div class="nav-item" onclick="nav('stats',this)">
+      <span class="nav-icon">📈</span> Statistics
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="user-card">
+        <div class="user-avatar">👑</div>
+        <div>
+          <div class="user-name">@Xricx0</div>
+          <div class="user-role">Owner</div>
+        </div>
+        <div style="margin-left:auto;color:var(--success);font-size:18px">●</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main">
+
+    <!-- ═══ DASHBOARD ═══ -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-header page-header-row fade-in">
+        <div>
+          <div class="page-title">Command Center</div>
+          <div class="page-subtitle">All systems nominal • Last sync 2s ago</div>
+        </div>
+        <div class="status-bar">
+          <div class="status-dot"></div>
+          Bot Online
+        </div>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="grid-4">
+        <div class="card stat-card fade-in">
+          <div class="stat-label">🤖 Running Scripts</div>
+          <div class="stat-value" id="stat-running" style="color:var(--success)">3</div>
+          <div class="stat-delta delta-up">▲ 1 since last hour</div>
+          <div class="accent-bar" style="width:70%;background:linear-gradient(90deg,var(--success),#00c853)"></div>
+        </div>
+        <div class="card stat-card fade-in fade-in-d1">
+          <div class="stat-label">👥 Active Users</div>
+          <div class="stat-value" id="stat-users" style="color:var(--accent2)">247</div>
+          <div class="stat-delta delta-up">▲ 18 today</div>
+          <div class="accent-bar" style="width:85%;background:linear-gradient(90deg,var(--accent2),#74d0fc)"></div>
+        </div>
+        <div class="card stat-card fade-in fade-in-d2">
+          <div class="stat-label">💳 Subscriptions</div>
+          <div class="stat-value" id="stat-subs" style="color:var(--accent)">12</div>
+          <div class="stat-delta delta-down">▼ 2 expired</div>
+          <div class="accent-bar" style="width:55%;background:linear-gradient(90deg,var(--accent),var(--accent4))"></div>
+        </div>
+        <div class="card stat-card fade-in fade-in-d3">
+          <div class="stat-label">📁 Uploaded Files</div>
+          <div class="stat-value" id="stat-files" style="color:var(--gold)">5</div>
+          <div class="stat-delta" style="color:var(--text-dim)">Across 3 users</div>
+          <div class="accent-bar" style="width:40%;background:linear-gradient(90deg,var(--gold),#ffd966)"></div>
+        </div>
+      </div>
+
+      <!-- Scripts + Activity -->
+      <div class="grid-2">
+        <div class="card fade-in fade-in-d1">
+          <div class="section-header">
+            <div class="section-title">🟢 Running Scripts <small id="running-count-label">3 active</small></div>
+            <button class="btn btn-success" onclick="runAllScripts()">▶ Run All</button>
+          </div>
+          <div class="script-list" id="script-list">
+            <!-- populated by JS -->
+          </div>
+        </div>
+        <div class="card fade-in fade-in-d2">
+          <div class="section-header">
+            <div class="section-title">⚡ Bot Speed</div>
+            <span class="tag tag-active">Excellent</span>
+          </div>
+          <div class="speed-gauge">
+            <svg class="gauge-svg" width="160" height="90" viewBox="0 0 160 90">
+              <path d="M10 80 A70 70 0 0 1 150 80" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="12" stroke-linecap="round"/>
+              <path id="speed-arc" d="M10 80 A70 70 0 0 1 150 80" fill="none" stroke="url(#speed-grad)" stroke-width="12" stroke-linecap="round"
+                stroke-dasharray="220" stroke-dashoffset="55" class="gauge-arc"/>
+              <defs>
+                <linearGradient id="speed-grad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0%" stop-color="#7c6af5"/>
+                  <stop offset="100%" stop-color="#4facfe"/>
+                </linearGradient>
+              </defs>
+              <text x="80" y="75" text-anchor="middle" fill="var(--text)" font-size="22" font-weight="700" id="speed-num">75</text>
+              <text x="80" y="90" text-anchor="middle" fill="rgba(255,255,255,0.4)" font-size="11">ms avg latency</text>
+            </svg>
+          </div>
+          <div style="display:flex;gap:12px;margin-top:8px">
+            <div style="flex:1">
+              <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px">CPU</div>
+              <div class="progress-wrap"><div class="progress-bar" id="cpu-bar" style="width:32%"></div></div>
+              <div style="font-size:11px;color:var(--text-dim);margin-top:3px" id="cpu-val">32%</div>
+            </div>
+            <div style="flex:1">
+              <div style="font-size:11px;color:var(--text-muted);margin-bottom:4px">Memory</div>
+              <div class="progress-wrap"><div class="progress-bar" id="mem-bar" style="width:58%;background:linear-gradient(90deg,var(--accent),var(--accent4))"></div></div>
+              <div style="font-size:11px;color:var(--text-dim);margin-top:3px" id="mem-val">58%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Activity -->
+      <div class="card fade-in fade-in-d3">
+        <div class="section-header">
+          <div class="section-title">📋 Recent Activity Log</div>
+          <button class="btn btn-secondary" onclick="nav('logs',document.querySelector('[onclick*=logs]'))">View Full →</button>
+        </div>
+        <div class="terminal" style="max-height:200px" id="activity-log">
+          <div class="log-dim">[00:00:00] System initialized</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ UPLOAD ═══ -->
+    <div class="page" id="page-upload">
+      <div class="page-header fade-in">
+        <div class="page-title">📤 Upload Script</div>
+        <div class="page-subtitle">Deploy Python or JavaScript bots instantly</div>
+      </div>
+      <div class="grid-2">
+        <div class="card fade-in">
+          <div class="upload-zone" onclick="document.getElementById('main-file-picker').click()" id="main-drop-zone"
+               ondragover="e=>(e.preventDefault(),this.classList.add('drag-over'))"
+               ondragleave="()=>this.classList.remove('drag-over')"
+               ondrop="handleDrop(event)">
+            <input type="file" id="main-file-picker" accept=".py,.js,.zip" onchange="handleFileSelect(this,true)">
+            <span class="upload-icon" id="upload-zone-icon">☁️</span>
+            <div class="upload-text" id="upload-zone-text">Drop script here or click to browse</div>
+            <div class="upload-sub" id="upload-zone-sub">Malware scan runs automatically</div>
+            <div class="file-types">
+              <span class="file-badge">🐍 .py</span>
+              <span class="file-badge">🟡 .js</span>
+              <span class="file-badge">📦 .zip</span>
+            </div>
+          </div>
+          <div style="margin-top:16px;display:flex;gap:10px">
+            <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-dim);cursor:pointer">
+              <input type="checkbox" id="main-auto-install" checked style="accent-color:var(--accent)">
+              Auto-install missing packages
+            </label>
+          </div>
+          <div style="margin-top:16px;display:flex;gap:10px">
+            <button class="btn btn-primary" style="flex:1" onclick="uploadScript(true)">🚀 Upload & Run Now</button>
+            <button class="btn btn-secondary" onclick="uploadScript(false,true)">📁 Upload Only</button>
+          </div>
+        </div>
+        <div class="card fade-in fade-in-d1">
+          <div class="section-title" style="margin-bottom:16px">📋 Upload Rules & Limits</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;align-items:center;gap:12px;font-size:13px">
+              <span style="font-size:20px">🆓</span>
+              <div>
+                <div style="font-weight:600">Free Users</div>
+                <div style="color:var(--text-dim)">Up to 10 files per account</div>
+              </div>
+              <div style="margin-left:auto;font-size:18px;font-weight:700;color:var(--accent)">10</div>
+            </div>
+            <div style="height:1px;background:var(--glass-border)"></div>
+            <div style="display:flex;align-items:center;gap:12px;font-size:13px">
+              <span style="font-size:20px">⭐</span>
+              <div>
+                <div style="font-weight:600">Subscribed Users</div>
+                <div style="color:var(--text-dim)">Up to 15 files per account</div>
+              </div>
+              <div style="margin-left:auto;font-size:18px;font-weight:700;color:var(--accent4)">15</div>
+            </div>
+            <div style="height:1px;background:var(--glass-border)"></div>
+            <div style="display:flex;align-items:center;gap:12px;font-size:13px">
+              <span style="font-size:20px">🛡️</span>
+              <div>
+                <div style="font-weight:600">Admin Users</div>
+                <div style="color:var(--text-dim)">Up to 999 files per account</div>
+              </div>
+              <div style="margin-left:auto;font-size:18px;font-weight:700;color:var(--gold)">999</div>
+            </div>
+            <div style="height:1px;background:var(--glass-border)"></div>
+            <div style="display:flex;align-items:center;gap:12px;font-size:13px">
+              <span style="font-size:20px">🚫</span>
+              <div>
+                <div style="font-weight:600">Blocked Extensions</div>
+                <div style="color:var(--text-dim)">.exe .dll .bat .scr .apk and more</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card fade-in fade-in-d2">
+        <div class="section-header">
+          <div class="section-title">🔍 Upload Console</div>
+        </div>
+        <div class="terminal-header">
+          <div class="term-dot" style="background:#ff5f57"></div>
+          <div class="term-dot" style="background:#ffbd2e"></div>
+          <div class="term-dot" style="background:#28c840"></div>
+          <span style="font-size:12px;color:var(--text-dim);margin-left:8px">upload-console</span>
+        </div>
+        <div class="terminal" id="upload-console">
+          <span class="log-dim">Waiting for upload...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ FILES ═══ -->
+    <div class="page" id="page-files">
+      <div class="page-header page-header-row fade-in">
+        <div>
+          <div class="page-title">📂 Manage Files</div>
+          <div class="page-subtitle">All uploaded scripts across users</div>
+        </div>
+        <button class="btn btn-primary" onclick="nav('upload',document.querySelector('[onclick*=upload]'))">+ Upload New</button>
+      </div>
+      <div class="card fade-in">
+        <div class="table-wrapper">
+          <table id="files-table">
+            <thead>
+              <tr>
+                <th>File Name</th><th>Type</th><th>Owner</th><th>Status</th><th>PID</th><th>Uptime</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="files-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ LOGS ═══ -->
+    <div class="page" id="page-logs">
+      <div class="page-header page-header-row fade-in">
+        <div>
+          <div class="page-title">🖥️ Live Logs</div>
+          <div class="page-subtitle">Real-time process output</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-secondary" onclick="clearLogs()">🗑 Clear</button>
+          <button class="btn btn-primary" onclick="pauseLogs()" id="pause-btn">⏸ Pause</button>
+        </div>
+      </div>
+      <div class="card fade-in">
+        <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+          <button class="btn btn-secondary" style="font-size:12px;padding:6px 14px" onclick="filterLog('all')" id="filt-all">All</button>
+          <button class="btn btn-secondary" style="font-size:12px;padding:6px 14px;color:var(--success);border-color:rgba(0,230,118,.3)" onclick="filterLog('success')" id="filt-success">✅ Success</button>
+          <button class="btn btn-secondary" style="font-size:12px;padding:6px 14px;color:var(--warn);border-color:rgba(255,186,0,.3)" onclick="filterLog('warn')" id="filt-warn">⚠️ Warnings</button>
+          <button class="btn btn-secondary" style="font-size:12px;padding:6px 14px;color:var(--danger);border-color:rgba(255,77,109,.3)" onclick="filterLog('error')" id="filt-error">❌ Errors</button>
+        </div>
+        <div class="terminal-header">
+          <div class="term-dot" style="background:#ff5f57"></div>
+          <div class="term-dot" style="background:#ffbd2e"></div>
+          <div class="term-dot" style="background:#28c840"></div>
+          <span style="font-size:12px;color:var(--text-dim);margin-left:8px">live-output</span>
+          <span style="margin-left:auto;font-size:11px;color:var(--success)" id="live-indicator">● LIVE</span>
+        </div>
+        <div class="terminal" style="max-height:440px" id="main-log"></div>
+      </div>
+    </div>
+
+    <!-- ═══ COMMAND ═══ -->
+    <div class="page" id="page-command">
+      <div class="page-header fade-in">
+        <div class="page-title">⚡ Send Command</div>
+        <div class="page-subtitle">Execute commands directly to running scripts</div>
+      </div>
+      <div class="card fade-in">
+        <div class="section-title" style="margin-bottom:16px">Enter Command</div>
+        <div class="cmd-input-wrap">
+          <input class="cmd-input" type="text" id="cmd-input" placeholder="e.g. /status or custom command..." onkeydown="if(event.key==='Enter')sendCmd()">
+          <button class="btn btn-primary" onclick="sendCmd()">⚡ Send</button>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px">
+          <div style="font-size:12px;color:var(--text-muted);margin-right:4px;align-self:center">Quick:</div>
+          <button class="btn btn-secondary" style="font-size:12px;padding:6px 12px" onclick="quickCmd('/status')">📊 Status</button>
+          <button class="btn btn-secondary" style="font-size:12px;padding:6px 12px" onclick="quickCmd('/restart')">🔄 Restart</button>
+          <button class="btn btn-secondary" style="font-size:12px;padding:6px 12px" onclick="quickCmd('/logs')">📋 Logs</button>
+          <button class="btn btn-secondary" style="font-size:12px;padding:6px 12px" onclick="quickCmd('/stop_all')">🛑 Stop All</button>
+          <button class="btn btn-secondary" style="font-size:12px;padding:6px 12px" onclick="quickCmd('/ping')">🏓 Ping</button>
+        </div>
+      </div>
+      <div class="card fade-in fade-in-d1">
+        <div class="section-title" style="margin-bottom:12px">Command History</div>
+        <div class="terminal" id="cmd-log" style="max-height:300px">
+          <span class="log-dim">No commands sent yet...</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ USERBOT ACCOUNTS ═══ -->
+    <div class="page" id="page-userbots">
+      <div class="page-header page-header-row fade-in">
+        <div>
+          <div class="page-title">📱 Userbot Accounts</div>
+          <div class="page-subtitle">Telegram accounts logged in and hosted as userbots</div>
+        </div>
+        <button class="btn btn-primary" style="background:linear-gradient(135deg,var(--accent3),var(--accent2));box-shadow:0 4px 20px rgba(0,242,200,0.3)" onclick="openModal('add-account-modal');resetLoginFlow()">➕ Add Account</button>
+      </div>
+
+      <div class="grid-4 fade-in">
+        <div class="card stat-card">
+          <div class="stat-label">🟢 Live Accounts</div>
+          <div class="stat-value" style="color:var(--accent3)" id="ub-stat-running">0</div>
+          <div class="accent-bar" style="width:100%;background:var(--accent3)"></div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-label">📦 Total Slots</div>
+          <div class="stat-value" style="color:var(--accent2)" id="ub-stat-total">0</div>
+          <div class="accent-bar" style="width:100%;background:var(--accent2)"></div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-label">🎚️ Slot Limit</div>
+          <div class="stat-value" style="color:var(--text)">50</div>
+          <div class="accent-bar" style="width:100%;background:var(--glass-border)"></div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-label">⚡ Commands Today</div>
+          <div class="stat-value" style="color:var(--gold)" id="ub-stat-cmds">0</div>
+          <div class="accent-bar" style="width:100%;background:var(--gold)"></div>
+        </div>
+      </div>
+
+      <div class="card fade-in fade-in-d1">
+        <div class="section-header">
+          <div class="section-title">Hosted Accounts</div>
+        </div>
+        <div class="script-list" id="userbot-list"></div>
+      </div>
+    </div>
+
+    <!-- ═══ SUBSCRIPTIONS ═══ -->
+    <div class="page" id="page-subscriptions">
+      <div class="page-header page-header-row fade-in">
+        <div>
+          <div class="page-title">💳 Subscriptions</div>
+          <div class="page-subtitle">Manage user subscription plans</div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-secondary" onclick="checkSubModal()">🔍 Check User</button>
+          <button class="btn btn-primary" onclick="openModal('sub-modal')">+ Add Subscription</button>
+        </div>
+      </div>
+      <div class="grid-3 fade-in">
+        <div class="card stat-card">
+          <div class="stat-label">💳 Total Active</div>
+          <div class="stat-value" style="color:var(--accent)">12</div>
+          <div class="stat-delta delta-up">▲ 3 this week</div>
+          <div class="accent-bar" style="width:60%;background:linear-gradient(90deg,var(--accent),var(--accent2))"></div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-label">⏰ Expiring Soon</div>
+          <div class="stat-value" style="color:var(--warn)">3</div>
+          <div class="stat-delta" style="color:var(--warn)">Within 7 days</div>
+          <div class="accent-bar" style="width:25%;background:linear-gradient(90deg,var(--warn),#ffe066)"></div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-label">❌ Expired</div>
+          <div class="stat-value" style="color:var(--danger)">2</div>
+          <div class="stat-delta delta-down">▼ Auto-removed</div>
+          <div class="accent-bar" style="width:15%;background:var(--danger)"></div>
+        </div>
+      </div>
+      <div class="card fade-in fade-in-d1">
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>User ID</th><th>Plan</th><th>Expiry Date</th><th>Days Left</th><th>Status</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="sub-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ ADMINS ═══ -->
+    <div class="page" id="page-admins">
+      <div class="page-header page-header-row fade-in">
+        <div>
+          <div class="page-title">👑 Admin Panel</div>
+          <div class="page-subtitle">Manage admin and owner privileges</div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal('admin-modal')">+ Promote Admin</button>
+      </div>
+      <div class="card fade-in">
+        <div class="table-wrapper">
+          <table>
+            <thead><tr><th>User ID</th><th>Username</th><th>Role</th><th>Since</th><th>Actions</th></tr></thead>
+            <tbody id="admin-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ BROADCAST ═══ -->
+    <div class="page" id="page-broadcast">
+      <div class="page-header fade-in">
+        <div class="page-title">📢 Broadcast</div>
+        <div class="page-subtitle">Send messages to all active users</div>
+      </div>
+      <div class="grid-2 fade-in">
+        <div class="card">
+          <div class="section-title" style="margin-bottom:14px">Compose Message</div>
+          <textarea class="broadcast-area" id="broadcast-msg" placeholder="Write your broadcast message here...&#10;&#10;Supports Telegram Markdown formatting:&#10;*bold* _italic_ `code`"></textarea>
+          <div style="display:flex;gap:10px;margin-top:14px;align-items:center">
+            <span style="font-size:12px;color:var(--text-dim)">Target:</span>
+            <select id="broadcast-target" style="background:rgba(0,0,0,.3);border:1px solid var(--glass-border);color:var(--text);padding:8px 12px;border-radius:8px;font-size:13px;outline:none;flex:1">
+              <option value="all">All Users (247)</option>
+              <option value="subscribed">Subscribed Only (12)</option>
+              <option value="free">Free Users (235)</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" style="width:100%;margin-top:12px;justify-content:center" onclick="sendBroadcast()">📢 Send Broadcast</button>
+        </div>
+        <div class="card fade-in-d1">
+          <div class="section-title" style="margin-bottom:14px">📋 Broadcast History</div>
+          <div class="script-list" id="broadcast-history">
+            <div style="font-size:13px;color:var(--text-dim);text-align:center;padding:20px">No broadcasts yet</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ SECURITY ═══ -->
+    <div class="page" id="page-security">
+      <div class="page-header fade-in">
+        <div class="page-title">🔒 Security Control</div>
+        <div class="page-subtitle">Bot lock, malware scanning, and access control</div>
+      </div>
+      <div id="lock-banner" class="lock-banner fade-in" style="display:none">
+        <div class="lock-icon">🔒</div>
+        <div class="lock-text">
+          <div class="lock-title">Bot is Currently Locked</div>
+          <div class="lock-sub">Only admins can interact. Regular users are blocked.</div>
+        </div>
+        <button class="btn btn-success" onclick="toggleBotLock()">🔓 Unlock Bot</button>
+      </div>
+      <div class="grid-2 fade-in">
+        <div class="card">
+          <div class="section-title" style="margin-bottom:16px">🔐 Bot Lock</div>
+          <div style="font-size:13px;color:var(--text-dim);margin-bottom:16px">
+            Locking the bot prevents regular users from interacting. Admins and Owner remain unaffected.
+          </div>
+          <div style="display:flex;align-items:center;gap:16px">
+            <div style="flex:1">
+              <div style="font-size:13px;font-weight:600;margin-bottom:4px" id="lock-status-text">Status: Unlocked</div>
+              <div style="font-size:11px;color:var(--text-dim)">Click to toggle bot access</div>
+            </div>
+            <button class="btn btn-danger" id="lock-btn" onclick="toggleBotLock()">🔒 Lock Bot</button>
+          </div>
+        </div>
+        <div class="card fade-in-d1">
+          <div class="section-title" style="margin-bottom:16px">🛡️ Malware Scanner</div>
+          <div style="font-size:13px;color:var(--text-dim);margin-bottom:16px">
+            All uploaded files are automatically scanned for malware signatures, suspicious extensions, and encrypted payloads.
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px" id="scan-list">
+            <div style="display:flex;align-items:center;gap:10px;font-size:13px">
+              <span style="color:var(--success)">✅</span> Executable signature detection
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:13px">
+              <span style="color:var(--success)">✅</span> Suspicious extension blocking
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:13px">
+              <span style="color:var(--success)">✅</span> Encrypted payload detection
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;font-size:13px">
+              <span style="color:var(--success)">✅</span> Keyword scan (ransomware, trojan…)
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card fade-in fade-in-d2">
+        <div class="section-title" style="margin-bottom:14px">🔑 Recent Security Events</div>
+        <div class="terminal" id="security-log" style="max-height:200px"></div>
+      </div>
+    </div>
+
+    <!-- ═══ STATISTICS ═══ -->
+    <div class="page" id="page-stats">
+      <div class="page-header fade-in">
+        <div class="page-title">📈 Statistics</div>
+        <div class="page-subtitle">Performance & usage insights</div>
+      </div>
+      <div class="grid-4 fade-in">
+        <div class="card stat-card">
+          <div class="stat-label">📨 Total Messages</div>
+          <div class="stat-value" id="anim-msgs" style="color:var(--accent2)">0</div>
+          <div class="accent-bar" style="width:90%;background:linear-gradient(90deg,var(--accent2),#74d0fc)"></div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-label">🤖 Bots Hosted</div>
+          <div class="stat-value" id="anim-bots" style="color:var(--accent)">0</div>
+          <div class="accent-bar" style="width:70%;background:linear-gradient(90deg,var(--accent),var(--accent4))"></div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-label">⏱️ Uptime</div>
+          <div class="stat-value" id="uptime-display" style="color:var(--success)">00:00</div>
+          <div class="accent-bar" style="width:100%;background:linear-gradient(90deg,var(--success),#00c853)"></div>
+        </div>
+        <div class="card stat-card">
+          <div class="stat-label">🔥 Commands Run</div>
+          <div class="stat-value" id="anim-cmds" style="color:var(--gold)">0</div>
+          <div class="accent-bar" style="width:60%;background:linear-gradient(90deg,var(--gold),#ffd966)"></div>
+        </div>
+      </div>
+      <div class="grid-2 fade-in fade-in-d1">
+        <div class="card">
+          <div class="section-title" style="margin-bottom:16px">📊 Activity (Last 7 Days)</div>
+          <div class="mini-chart" id="weekly-chart" style="height:120px">
+            <!-- populated by JS -->
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:10px;color:var(--text-muted)">
+            <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="section-title" style="margin-bottom:16px">👥 User Distribution</div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px">
+                <span>Free Users</span><span style="color:var(--text-dim)">235 (95%)</span>
+              </div>
+              <div class="progress-wrap"><div class="progress-bar" style="width:95%"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px">
+                <span>Subscribed</span><span style="color:var(--accent)">12 (5%)</span>
+              </div>
+              <div class="progress-wrap"><div class="progress-bar" style="width:5%;background:linear-gradient(90deg,var(--accent),var(--accent4))"></div></div>
+            </div>
+            <div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px">
+                <span>Admins</span><span style="color:var(--gold)">3 (&lt;1%)</span>
+              </div>
+              <div class="progress-wrap"><div class="progress-bar" style="width:2%;background:linear-gradient(90deg,var(--gold),#ffd966)"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+</div><!-- /#app-view -->
+
+<script>
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// State
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const state = {
+  botLocked: false,
+  logsPaused: false,
+  startTime: Date.now(),
+  totalMessages: 14872,
+  totalBots: 53,
+  totalCmds: 2940,
+  scripts: [
+    { name: 'sidhosting.py', type: 'py', user: 2119464081, status: 'running', pid: 12345, uptime: 7240 },
+    { name: 'userbot_main.py', type: 'py', user: 983241233, status: 'running', pid: 12388, uptime: 3600 },
+    { name: 'notif_bot.js', type: 'js', user: 771234561, status: 'running', pid: 12401, uptime: 1800 },
+    { name: 'scraper.py', type: 'py', user: 555123456, status: 'stopped', pid: null, uptime: 0 },
+    { name: 'news_feed.js', type: 'js', user: 332198771, status: 'stopped', pid: null, uptime: 0 },
+  ],
+  subscriptions: [
+    { uid: 983241233, plan: 'Premium', expiry: '2025-07-20', daysLeft: 32 },
+    { uid: 771234561, plan: 'Standard', expiry: '2025-07-05', daysLeft: 17 },
+    { uid: 555123456, plan: 'Premium', expiry: '2025-06-25', daysLeft: 7 },
+    { uid: 332198771, plan: 'Standard', expiry: '2025-06-20', daysLeft: 2 },
+    { uid: 441092312, plan: 'Standard', expiry: '2025-06-18', daysLeft: 0 },
+    { uid: 112345671, plan: 'Expired', expiry: '2025-06-10', daysLeft: -8 },
+  ],
+  admins: [
+    { uid: 2119464081, username: '@Xricx0', role: 'owner', since: '2024-01-01' },
+    { uid: 771234561, username: '@AdminBot1', role: 'admin', since: '2024-03-15' },
+    { uid: 332198771, username: '@ModUser2', role: 'admin', since: '2024-05-01' },
+  ],
+  broadcastHistory: [],
+  logEntries: [],
+  securityEvents: [
+    { t: 'BLOCKED', msg: 'Blocked .exe upload from user 4481234', level: 'error' },
+    { t: 'SCAN', msg: 'All 5 scripts passed malware scan', level: 'success' },
+    { t: 'AUTH', msg: 'Admin login from @AdminBot1', level: 'info' },
+    { t: 'LOCK', msg: 'Bot was temporarily locked by Owner', level: 'warn' },
+  ],
+  userbots: [
+    { uid: 2119464081, slot: 0, phone: '+91••••••210', name: 'Owner Account', status: 'running', uptime: 51200, cmds: 812 },
+    { uid: 983241233, slot: 0, phone: '+1••••••047',  name: 'Alex\'s Userbot', status: 'running', uptime: 9040,  cmds: 214 },
+  ]
+};
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Backend config — fill these in once you deploy sidhosting.py /
+// lastuser.py with the API patch (see backend/README.md). Left blank,
+// the dashboard runs fully on demo data so the UI still feels alive.
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const CONFIG = {
+  BOT_API_BASE: '',      // e.g. 'https://your-sidhosting-host.example.com'
+  USERBOT_API_BASE: '',  // e.g. 'https://your-lastuser-host.example.com'
+  ADMIN_TOKEN: '',       // value of ADMIN_API_TOKEN set on the backend
+};
+async function apiFetch(base, path, opts = {}) {
+  try {
+    const url = (base || '').replace(/\/$/, '') + path; // '' base = same-origin relative fetch
+    const res = await fetch(url, {
+      ...opts,
+      headers: {
+        'Content-Type': 'application/json',
+        ...(CONFIG.ADMIN_TOKEN ? { 'Authorization': 'Bearer ' + CONFIG.ADMIN_TOKEN } : {}),
+        ...(opts.headers || {}),
+      },
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    return await res.json();
+  } catch (e) {
+    console.warn('API unreachable, using demo data:', e.message);
+    return null;
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Site ⇄ App view switching
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function showApp() {
+  document.getElementById('site-view').style.display = 'none';
+  document.getElementById('app-view').style.display = 'block';
+  window.scrollTo(0,0);
+  history.replaceState(null, '', '#dashboard');
+}
+function showSite() {
+  document.getElementById('app-view').style.display = 'none';
+  document.getElementById('site-view').style.display = 'block';
+  window.scrollTo(0,0);
+  history.replaceState(null, '', '#');
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Navigation
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function nav(page, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  if (el) el.classList.add('active');
+  // Re-render on switch
+  if (page === 'files') renderFiles();
+  if (page === 'subscriptions') renderSubs();
+  if (page === 'admins') renderAdmins();
+  if (page === 'stats') { animateCounters(); renderWeeklyChart(); }
+  if (page === 'security') renderSecurityLog();
+  if (page === 'logs') renderMainLog();
+  if (page === 'userbots') renderUserbots();
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Toast
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function toast(msg, type='info') {
+  const icons = { success:'✅', error:'❌', warn:'⚠️', info:'💡' };
+  const colors = { success:'var(--success)', error:'var(--danger)', warn:'var(--warn)', info:'var(--accent2)' };
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.style.borderColor = colors[type];
+  t.innerHTML = `<span class="toast-icon">${icons[type]}</span><span>${msg}</span>`;
+  document.getElementById('toast-container').appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Modals
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Log System
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function ts() { return new Date().toTimeString().slice(0,8); }
+function addLog(msg, level='info') {
+  const cls = { info:'log-info', success:'log-success', warn:'log-warn', error:'log-error', dim:'log-dim' }[level] || 'log-info';
+  const entry = { msg, level, time: ts(), cls };
+  state.logEntries.push(entry);
+
+  const line = `<div class="${cls}">[${entry.time}] ${msg}</div>`;
+  const actLog = document.getElementById('activity-log');
+  if (actLog) { actLog.innerHTML += line; actLog.scrollTop = actLog.scrollHeight; }
+
+  if (!state.logsPaused) {
+    const mLog = document.getElementById('main-log');
+    if (mLog) { mLog.innerHTML += line; mLog.scrollTop = mLog.scrollHeight; }
+  }
+}
+function renderMainLog() {
+  const el = document.getElementById('main-log');
+  if (!el) return;
+  el.innerHTML = state.logEntries.map(e => `<div class="${e.cls}">[${e.time}] ${e.msg}</div>`).join('');
+  el.scrollTop = el.scrollHeight;
+}
+function clearLogs() {
+  state.logEntries = [];
+  ['main-log','activity-log'].forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML = ''; });
+  toast('Logs cleared','info');
+}
+let pauseTimeoutRef;
+function pauseLogs() {
+  state.logsPaused = !state.logsPaused;
+  const btn = document.getElementById('pause-btn');
+  const ind = document.getElementById('live-indicator');
+  btn.textContent = state.logsPaused ? '▶ Resume' : '⏸ Pause';
+  if (ind) { ind.textContent = state.logsPaused ? '⏸ PAUSED' : '● LIVE'; ind.style.color = state.logsPaused ? 'var(--warn)' : 'var(--success)'; }
+}
+function filterLog(type) {
+  const el = document.getElementById('main-log');
+  if (!el) return;
+  const filtered = type === 'all' ? state.logEntries :
+    state.logEntries.filter(e => e.level === type);
+  el.innerHTML = filtered.map(e => `<div class="${e.cls}">[${e.time}] ${e.msg}</div>`).join('');
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Scripts
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function fmtUptime(s) {
+  if (!s) return '--';
+  const h = Math.floor(s/3600), m = Math.floor((s%3600)/60), ss = s%60;
+  return [h,m,ss].map(x=>String(x).padStart(2,'0')).join(':');
+}
+function renderScripts() {
+  const list = document.getElementById('script-list');
+  if (!list) return;
+  const running = state.scripts.filter(s => s.status === 'running');
+  document.getElementById('running-count-label').textContent = running.length + ' active';
+  document.getElementById('stat-running').textContent = running.length;
+  document.getElementById('nav-running-count').textContent = running.length;
+
+  list.innerHTML = state.scripts.map((s,i) => `
+    <div class="script-item" id="sci-${i}">
+      <div class="script-status-dot ${s.status==='running'?'dot-running':s.status==='pending'?'dot-pending':'dot-stopped'}"></div>
+      <div class="script-info">
+        <div class="script-name">${s.name}</div>
+        <div class="script-meta">${s.type.toUpperCase()} • User: ${s.user} • ${s.status==='running'?'PID: '+s.pid+' • '+fmtUptime(s.uptime):'Stopped'}</div>
+      </div>
+      <div class="script-actions">
+        ${s.status!=='running'
+          ? `<button class="btn-icon run" data-tip="Start" onclick="startScript(${i})">▶</button>`
+          : `<button class="btn-icon stop" data-tip="Stop" onclick="stopScript(${i})">■</button>`}
+        <button class="btn-icon" data-tip="View Logs" onclick="nav('logs',document.querySelectorAll('.nav-item')[4])">📋</button>
+        <button class="btn-icon del" data-tip="Delete" onclick="deleteScript(${i})">🗑</button>
+      </div>
+    </div>`).join('');
+}
+function startScript(i) {
+  state.scripts[i].status = 'pending';
+  renderScripts();
+  addLog(`Starting script: ${state.scripts[i].name}...`, 'info');
+  setTimeout(() => {
+    state.scripts[i].status = 'running';
+    state.scripts[i].pid = Math.floor(10000 + Math.random()*5000);
+    state.scripts[i].uptime = 1;
+    renderScripts(); renderFiles();
+    addLog(`✅ Script ${state.scripts[i].name} started (PID: ${state.scripts[i].pid})`, 'success');
+    toast(`${state.scripts[i].name} is running`, 'success');
+  }, 1800);
+}
+function stopScript(i) {
+  const s = state.scripts[i];
+  addLog(`Stopping ${s.name} (PID: ${s.pid})...`, 'warn');
+  s.status = 'stopped'; s.pid = null; s.uptime = 0;
+  renderScripts(); renderFiles();
+  toast(`${s.name} stopped`, 'warn');
+}
+function deleteScript(i) {
+  const s = state.scripts[i];
+  if (s.status === 'running') { toast('Stop the script first before deleting', 'error'); return; }
+  state.scripts.splice(i, 1);
+  renderScripts(); renderFiles();
+  addLog(`Deleted script: ${s.name}`, 'warn');
+  toast(`${s.name} deleted`, 'info');
+  document.getElementById('stat-files').textContent = state.scripts.length;
+  document.getElementById('nav-file-count').textContent = state.scripts.length;
+}
+function runAllScripts() {
+  state.scripts.forEach((_,i) => { if (state.scripts[i].status !== 'running') startScript(i); });
+  toast('Starting all stopped scripts...', 'info');
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Files Table
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function renderFiles() {
+  const tb = document.getElementById('files-tbody');
+  if (!tb) return;
+  tb.innerHTML = state.scripts.map((s,i) => `<tr>
+    <td style="font-family:monospace;font-size:13px">${s.name}</td>
+    <td><span class="tag" style="background:rgba(${s.type==='py'?'79,172,254':'248,87,166'},0.12);color:${s.type==='py'?'var(--accent2)':'var(--accent4)'};border-color:rgba(${s.type==='py'?'79,172,254':'248,87,166'},0.3)">${s.type==='py'?'🐍 Python':'🟡 JS'}</span></td>
+    <td style="font-size:12px;color:var(--text-dim)">${s.user}</td>
+    <td><span class="tag ${s.status==='running'?'tag-active':'tag-expired'}">${s.status==='running'?'● Running':'○ Stopped'}</span></td>
+    <td style="font-family:monospace;font-size:12px;color:var(--text-dim)">${s.pid || '—'}</td>
+    <td style="font-size:12px;color:var(--text-dim)">${fmtUptime(s.uptime)}</td>
+    <td>
+      <div style="display:flex;gap:6px">
+        ${s.status!=='running'
+          ? `<button class="btn btn-success" style="font-size:11px;padding:5px 10px" onclick="startScript(${i})">▶ Start</button>`
+          : `<button class="btn btn-danger" style="font-size:11px;padding:5px 10px" onclick="stopScript(${i})">■ Stop</button>`}
+        <button class="btn btn-secondary" style="font-size:11px;padding:5px 10px" onclick="deleteScript(${i})">🗑</button>
+      </div>
+    </td>
+  </tr>`).join('');
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Upload
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function handleFileSelect(input, isMain=false) {
+  const file = input.files[0];
+  if (!file) return;
+  const el = isMain ? document.getElementById('upload-zone-sub') : document.getElementById('file-name-display');
+  if (el) el.textContent = '📄 ' + file.name;
+}
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('main-drop-zone').classList.remove('drag-over');
+  const f = e.dataTransfer.files[0];
+  if (f) { document.getElementById('upload-zone-sub').textContent = '📄 ' + f.name; }
+}
+function consoleLog(msg, level='dim', target='upload-console') {
+  const cls = { success:'log-success',error:'log-error',warn:'log-warn',info:'log-info',dim:'log-dim' }[level];
+  const el = document.getElementById(target);
+  if (el) { el.innerHTML += `<div class="${cls}">[${ts()}] ${msg}</div>`; el.scrollTop = el.scrollHeight; }
+}
+function uploadScript(run=true, saveOnly=false) {
+  const console_ = document.getElementById('upload-console');
+  if (console_) console_.innerHTML = '';
+  const fakeFile = `bot_script_${Date.now()}.py`;
+  const steps = [
+    [0,   'dim',     `Receiving file: ${fakeFile}`],
+    [400, 'info',    'Running malware signature scan...'],
+    [900, 'success', '✅ No threats detected — file is clean'],
+    [1300,'info',    'Checking Python syntax...'],
+    [1800,'success', '✅ Syntax OK'],
+    [2200,'info',    'Installing missing packages (telebot, psutil)...'],
+    [2900,'success', '✅ Packages installed successfully'],
+    [3300,'info',    `Launching ${fakeFile}...`],
+    [3900,'success', `🚀 Script is RUNNING (PID: ${Math.floor(10000+Math.random()*5000)})`],
+  ];
+  steps.forEach(([delay, level, msg]) => setTimeout(() => consoleLog(msg, level), delay));
+  setTimeout(() => {
+    const newScript = {
+      name: fakeFile, type: 'py',
+      user: 2119464081, status: run ? 'running' : 'stopped',
+      pid: run ? Math.floor(10000+Math.random()*5000) : null,
+      uptime: run ? 1 : 0
+    };
+    state.scripts.push(newScript);
+    renderScripts(); renderFiles();
+    document.getElementById('stat-files').textContent = state.scripts.length;
+    document.getElementById('nav-file-count').textContent = state.scripts.length;
+    addLog(`Uploaded and ${run?'running':'saved'}: ${fakeFile}`, 'success');
+    toast(run ? `${fakeFile} is now running!` : `${fakeFile} uploaded`, 'success');
+  }, 4200);
+  closeModal('upload-modal');
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Subscriptions
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function renderSubs() {
+  const tb = document.getElementById('sub-tbody');
+  if (!tb) return;
+  tb.innerHTML = state.subscriptions.map((s,i) => `<tr>
+    <td style="font-family:monospace;font-size:13px">${s.uid}</td>
+    <td><span class="tag tag-active" style="${s.daysLeft<=0?'background:rgba(255,77,109,0.12);color:var(--danger);border-color:rgba(255,77,109,0.25)':''}">${s.plan}</span></td>
+    <td style="font-size:12px">${s.expiry}</td>
+    <td style="font-size:13px;font-weight:600;color:${s.daysLeft<=0?'var(--danger)':s.daysLeft<=7?'var(--warn)':'var(--success)'}">${s.daysLeft>0?s.daysLeft+' days':'Expired'}</td>
+    <td><span class="tag ${s.daysLeft>0?'tag-active':'tag-expired'}">${s.daysLeft>0?'Active':'Expired'}</span></td>
+    <td>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-secondary" style="font-size:11px;padding:5px 10px" onclick="extendSub(${i})">+30d</button>
+        <button class="btn btn-danger" style="font-size:11px;padding:5px 10px" onclick="removeSub(${i})">Remove</button>
+      </div>
+    </td>
+  </tr>`).join('');
+}
+function addSubscription() {
+  const uid = parseInt(document.getElementById('sub-uid').value);
+  const days = parseInt(document.getElementById('sub-days').value);
+  if (!uid || !days) { toast('Enter valid User ID and days', 'error'); return; }
+  const expiry = new Date(Date.now() + days*86400000).toISOString().slice(0,10);
+  state.subscriptions.unshift({ uid, plan: 'Premium', expiry, daysLeft: days });
+  renderSubs();
+  document.getElementById('stat-subs').textContent = state.subscriptions.filter(s=>s.daysLeft>0).length;
+  addLog(`Subscription added for ${uid} (${days} days)`, 'success');
+  toast(`Subscription activated for ${uid}`, 'success');
+  closeModal('sub-modal');
+}
+function extendSub(i) {
+  state.subscriptions[i].daysLeft += 30;
+  const d = new Date(state.subscriptions[i].expiry);
+  d.setDate(d.getDate() + 30);
+  state.subscriptions[i].expiry = d.toISOString().slice(0,10);
+  renderSubs();
+  toast(`Extended by 30 days`, 'success');
+}
+function removeSub(i) {
+  const uid = state.subscriptions[i].uid;
+  state.subscriptions.splice(i, 1);
+  renderSubs();
+  addLog(`Subscription removed for ${uid}`, 'warn');
+  toast(`Subscription removed`, 'info');
+}
+function checkSubModal() {
+  const uid = prompt('Enter User ID to check:');
+  if (!uid) return;
+  const found = state.subscriptions.find(s => String(s.uid) === uid);
+  if (found) {
+    toast(`User ${uid}: ${found.daysLeft > 0 ? found.daysLeft + ' days left' : 'Expired'}`, found.daysLeft > 0 ? 'success' : 'error');
+  } else {
+    toast(`No subscription found for ${uid}`, 'warn');
+  }
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Admins
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function renderAdmins() {
+  const tb = document.getElementById('admin-tbody');
+  if (!tb) return;
+  tb.innerHTML = state.admins.map((a,i) => `<tr>
+    <td style="font-family:monospace;font-size:13px">${a.uid}</td>
+    <td>${a.username}</td>
+    <td><span class="tag ${a.role==='owner'?'tag-owner':'tag-admin'}">${a.role==='owner'?'👑 Owner':'🛡️ Admin'}</span></td>
+    <td style="font-size:12px;color:var(--text-dim)">${a.since}</td>
+    <td>${a.role!=='owner'?`<button class="btn btn-danger" style="font-size:11px;padding:5px 10px" onclick="removeAdmin(${i})">Remove</button>`:
+    '<span style="font-size:12px;color:var(--text-muted)">Owner</span>'}</td>
+  </tr>`).join('');
+}
+function addAdmin() {
+  const uid = parseInt(document.getElementById('admin-uid').value);
+  if (!uid) { toast('Enter valid User ID', 'error'); return; }
+  if (state.admins.find(a => a.uid === uid)) { toast('User is already an admin', 'warn'); return; }
+  state.admins.push({ uid, username: `@user_${uid}`, role: 'admin', since: new Date().toISOString().slice(0,10) });
+  renderAdmins();
+  addLog(`Admin promoted: ${uid}`, 'success');
+  toast(`User ${uid} promoted to Admin`, 'success');
+  closeModal('admin-modal');
+}
+function removeAdmin(i) {
+  const uid = state.admins[i].uid;
+  state.admins.splice(i, 1);
+  renderAdmins();
+  addLog(`Admin removed: ${uid}`, 'warn');
+  toast(`Admin ${uid} removed`, 'info');
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Broadcast
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function sendBroadcast() {
+  const msg = document.getElementById('broadcast-msg').value.trim();
+  const target = document.getElementById('broadcast-target').value;
+  if (!msg) { toast('Write a message first', 'error'); return; }
+  const targets = { all: 247, subscribed: 12, free: 235 };
+  state.broadcastHistory.unshift({ msg: msg.slice(0,80)+'...', target, count: targets[target], time: ts() });
+  document.getElementById('broadcast-msg').value = '';
+  renderBroadcastHistory();
+  addLog(`Broadcast sent to ${targets[target]} users`, 'success');
+  toast(`Broadcast sent to ${targets[target]} users!`, 'success');
+}
+function renderBroadcastHistory() {
+  const el = document.getElementById('broadcast-history');
+  if (!el) return;
+  if (!state.broadcastHistory.length) { el.innerHTML = '<div style="font-size:13px;color:var(--text-dim);text-align:center;padding:20px">No broadcasts yet</div>'; return; }
+  el.innerHTML = state.broadcastHistory.map(b => `
+    <div class="script-item" style="flex-direction:column;align-items:flex-start">
+      <div style="font-size:12px;color:var(--text-dim);margin-bottom:4px">${b.time} • ${b.target} (${b.count} users)</div>
+      <div style="font-size:13px;word-break:break-word">${b.msg}</div>
+    </div>`).join('');
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Bot Lock
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function toggleBotLock() {
+  state.botLocked = !state.botLocked;
+  const banner = document.getElementById('lock-banner');
+  const btn = document.getElementById('lock-btn');
+  const txt = document.getElementById('lock-status-text');
+  if (banner) banner.style.display = state.botLocked ? 'flex' : 'none';
+  if (btn) { btn.textContent = state.botLocked ? '🔓 Unlock Bot' : '🔒 Lock Bot'; btn.className = state.botLocked ? 'btn btn-success' : 'btn btn-danger'; }
+  if (txt) txt.textContent = state.botLocked ? 'Status: 🔒 Locked' : 'Status: 🔓 Unlocked';
+  addLog(state.botLocked ? '🔒 Bot locked by admin' : '🔓 Bot unlocked', state.botLocked ? 'warn' : 'success');
+  toast(state.botLocked ? 'Bot locked — users blocked' : 'Bot unlocked — users can interact', state.botLocked ? 'warn' : 'success');
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Command
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function sendCmd() {
+  const inp = document.getElementById('cmd-input');
+  const cmd = inp.value.trim();
+  if (!cmd) return;
+  const log = document.getElementById('cmd-log');
+  if (log.innerHTML.includes('No commands')) log.innerHTML = '';
+  log.innerHTML += `<div class="log-info">[${ts()}] $ ${cmd}</div>`;
+  setTimeout(() => {
+    const responses = {
+      '/status': '📊 Bot: Online | Scripts: ' + state.scripts.filter(s=>s.status==='running').length + ' running | Users: 247',
+      '/ping': '🏓 Pong! Latency: 74ms',
+      '/restart': '🔄 Restarting all scripts...',
+      '/stop_all': '🛑 Stopping all running scripts...',
+      '/logs': '📋 Last 50 log entries sent to admin.',
+    };
+    const reply = responses[cmd] || `Command "${cmd}" executed successfully.`;
+    log.innerHTML += `<div class="log-success">[${ts()}] ${reply}</div>`;
+    log.scrollTop = log.scrollHeight;
+  }, 600);
+  addLog(`Command sent: ${cmd}`, 'info');
+  inp.value = '';
+}
+function quickCmd(cmd) {
+  document.getElementById('cmd-input').value = cmd;
+  sendCmd();
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Statistics
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function animateCounters() {
+  function animCount(id, target, suffix='') {
+    const el = document.getElementById(id);
+    if (!el) return;
+    let current = 0;
+    const step = Math.ceil(target / 60);
+    const t = setInterval(() => {
+      current = Math.min(current + step, target);
+      el.textContent = current.toLocaleString() + suffix;
+      if (current >= target) clearInterval(t);
+    }, 16);
+  }
+  animCount('anim-msgs', state.totalMessages);
+  animCount('anim-bots', state.totalBots);
+  animCount('anim-cmds', state.totalCmds);
+}
+function renderWeeklyChart() {
+  const el = document.getElementById('weekly-chart');
+  if (!el) return;
+  const vals = [62, 85, 45, 93, 78, 55, 88];
+  el.innerHTML = vals.map(v => `
+    <div class="chart-bar-wrap">
+      <div class="chart-bar-bg" style="height:100px">
+        <div class="chart-bar-fill" style="height:0%;background:linear-gradient(0deg,var(--accent),var(--accent2))" data-target="${v}"></div>
+      </div>
+    </div>`).join('');
+  setTimeout(() => {
+    el.querySelectorAll('.chart-bar-fill').forEach(b => {
+      b.style.height = b.dataset.target + '%';
+    });
+  }, 100);
+}
+function updateUptime() {
+  const el = document.getElementById('uptime-display');
+  if (!el) return;
+  const secs = Math.floor((Date.now() - state.startTime) / 1000);
+  const h = Math.floor(secs/3600), m = Math.floor((secs%3600)/60), s = secs%60;
+  el.textContent = [h,m,s].map(x=>String(x).padStart(2,'0')).join(':');
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Security Log
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function renderSecurityLog() {
+  const el = document.getElementById('security-log');
+  if (!el) return;
+  const cls = { error:'log-error', success:'log-success', warn:'log-warn', info:'log-info' };
+  el.innerHTML = state.securityEvents.map(e =>
+    `<div class="${cls[e.level]}">[${ts()}] [${e.t}] ${e.msg}</div>`
+  ).join('');
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Speed / System simulation
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function updateSystemStats() {
+  const cpu = 20 + Math.random() * 40;
+  const mem = 45 + Math.random() * 25;
+  const lat = 50 + Math.random() * 80;
+  const cpuBar = document.getElementById('cpu-bar');
+  const memBar = document.getElementById('mem-bar');
+  const cpuVal = document.getElementById('cpu-val');
+  const memVal = document.getElementById('mem-val');
+  const speedNum = document.getElementById('speed-num');
+  const speedArc = document.getElementById('speed-arc');
+  if (cpuBar) cpuBar.style.width = cpu + '%';
+  if (memBar) memBar.style.width = mem + '%';
+  if (cpuVal) cpuVal.textContent = Math.round(cpu) + '%';
+  if (memVal) memVal.textContent = Math.round(mem) + '%';
+  if (speedNum) speedNum.textContent = Math.round(lat);
+  if (speedArc) {
+    const pct = 1 - (lat / 200);
+    speedArc.setAttribute('stroke-dashoffset', 220 * (1 - pct));
+  }
+  // Update uptime of running scripts
+  state.scripts.forEach(s => { if (s.status === 'running') s.uptime++; });
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Live log simulation
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const logMessages = [
+  ['Bot polling started.', 'info'],
+  ['User 2119464081 sent /start', 'dim'],
+  ['Script sidhosting.py — heartbeat OK', 'success'],
+  ['userbot_main.py — event dispatched', 'dim'],
+  ['User 771234561 uploaded notif_bot.js', 'info'],
+  ['Malware scan passed for notif_bot.js', 'success'],
+  ['Package telebot installed successfully', 'success'],
+  ['PID 12345 memory: 42.1 MB', 'dim'],
+  ['Broadcast sent to 247 users', 'info'],
+  ['ReadTimeout — polling restarted', 'warn'],
+  ['User 441092312 subscription expired', 'warn'],
+  ['Admin @AdminBot1 logged in', 'info'],
+  ['Blocked upload: malware.exe — ELF signature', 'error'],
+  ['Script userbot_main.py — 3600s uptime', 'success'],
+];
+let logIdx = 0;
+function tickLog() {
+  const [msg, lvl] = logMessages[logIdx % logMessages.length];
+  addLog(msg, lvl); logIdx++;
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Userbot accounts
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+async function refreshUserbotsFromApi() {
+  const data = await apiFetch(CONFIG.USERBOT_API_BASE, '/api/userbot/accounts');
+  if (data && Array.isArray(data.accounts)) { state.userbots = data.accounts; }
+}
+function renderUserbots() {
+  const list = document.getElementById('userbot-list');
+  if (!list) return;
+  const running = state.userbots.filter(u => u.status === 'running');
+  document.getElementById('nav-userbot-count').textContent = state.userbots.length;
+  document.getElementById('ub-stat-running').textContent = running.length;
+  document.getElementById('ub-stat-total').textContent = state.userbots.length;
+  document.getElementById('ub-stat-cmds').textContent = state.userbots.reduce((a,u)=>a+(u.cmds||0),0);
+
+  if (!state.userbots.length) {
+    list.innerHTML = `<div style="text-align:center;padding:40px 0;color:var(--text-dim)">
+      No userbot accounts yet. <span style="color:var(--accent3);cursor:pointer" onclick="openModal('add-account-modal');resetLoginFlow()">Add your first account →</span>
+    </div>`;
+    return;
+  }
+  list.innerHTML = state.userbots.map((u,i) => `
+    <div class="userbot-card">
+      <div class="userbot-avatar">${(u.name||'U')[0].toUpperCase()}</div>
+      <div class="userbot-info">
+        <div class="userbot-phone">${u.phone} <span style="color:var(--text-dim);font-weight:400;font-family:var(--font-body)">— ${u.name||'Userbot'}</span></div>
+        <div class="userbot-meta">
+          <span class="script-status-dot ${u.status==='running'?'dot-running':'dot-stopped'}" style="display:inline-block;width:7px;height:7px;margin-right:5px"></span>
+          ${u.status==='running' ? 'Online • ' + fmtUptime(u.uptime) : 'Stopped'} · ${u.cmds||0} commands run
+        </div>
+      </div>
+      <div class="userbot-actions">
+        ${u.status!=='running'
+          ? `<button class="btn-icon run" data-tip="Start" onclick="startUserbot(${i})">▶</button>`
+          : `<button class="btn-icon stop" data-tip="Restart" onclick="stopUserbot(${i},true)">↻</button>`}
+        ${u.status==='running' ? `<button class="btn-icon stop" data-tip="Stop" onclick="stopUserbot(${i})">■</button>` : ''}
+        <button class="btn-icon del" data-tip="Log out" onclick="logoutUserbot(${i})">🗑</button>
+      </div>
+    </div>`).join('');
+}
+async function startUserbot(i) {
+  const u = state.userbots[i];
+  addLog(`Starting userbot ${u.phone}...`, 'info');
+  const res = await apiFetch(CONFIG.USERBOT_API_BASE, `/api/userbot/accounts/${u.uid}/${u.slot}/start`, { method:'POST' });
+  u.status = 'running'; u.uptime = 1;
+  renderUserbots();
+  toast(`${u.phone} is live`, 'success');
+  addLog(`✅ Userbot ${u.phone} started`, 'success');
+}
+async function stopUserbot(i, restart=false) {
+  const u = state.userbots[i];
+  addLog(`${restart?'Restarting':'Stopping'} userbot ${u.phone}...`, 'warn');
+  await apiFetch(CONFIG.USERBOT_API_BASE, `/api/userbot/accounts/${u.uid}/${u.slot}/${restart?'restart':'stop'}`, { method:'POST' });
+  if (restart) { u.uptime = 1; toast(`${u.phone} restarted`, 'success'); }
+  else { u.status = 'stopped'; u.uptime = 0; toast(`${u.phone} stopped`, 'warn'); }
+  renderUserbots();
+}
+async function logoutUserbot(i) {
+  const u = state.userbots[i];
+  if (!confirm(`Log out ${u.phone}? This revokes its session — it will stop running immediately.`)) return;
+  await apiFetch(CONFIG.USERBOT_API_BASE, `/api/userbot/accounts/${u.uid}/${u.slot}`, { method:'DELETE' });
+  state.userbots.splice(i,1);
+  renderUserbots();
+  toast('Account logged out', 'info');
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Userbot login flow (phone → code → 2FA → done)
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const loginFlow = { phone: '', pendingId: null, needs2fa: false };
+function resetLoginFlow() {
+  loginFlow.phone = ''; loginFlow.pendingId = null; loginFlow.needs2fa = false;
+  document.getElementById('login-phone').value = '';
+  document.getElementById('login-2fa-pass').value = '';
+  document.querySelectorAll('.otp-box').forEach(b => { b.value=''; b.classList.remove('filled'); });
+  showLoginStep('phone');
+}
+function showLoginStep(step) {
+  ['phone','code','2fa','done'].forEach(s => {
+    document.getElementById('login-' + s + '-step').style.display = (s===step) ? 'block' : 'none';
+  });
+  const stepIndex = { phone: 1, code: 2, '2fa': 3, done: 3 }[step];
+  [1,2,3].forEach(n => {
+    const el = document.getElementById('lstep-' + n);
+    el.classList.toggle('active', n === stepIndex);
+    el.classList.toggle('done', n < stepIndex);
+  });
+}
+async function loginSendCode(isResend=false) {
+  const phone = document.getElementById('login-phone').value.trim() || loginFlow.phone;
+  const digits = phone.replace(/[^0-9]/g,'');
+  if (digits.length < 7) { toast('Enter a valid phone number with country code', 'error'); return; }
+  loginFlow.phone = phone;
+  const btn = document.getElementById('btn-send-code');
+  if (btn) { btn.textContent = 'Sending…'; btn.disabled = true; }
+  const data = await apiFetch(CONFIG.USERBOT_API_BASE, '/api/userbot/login/send_code', {
+    method: 'POST', body: JSON.stringify({ phone })
+  });
+  if (btn) { btn.textContent = 'Send Code'; btn.disabled = false; }
+  loginFlow.pendingId = data ? data.pending_id : 'demo';
+  document.getElementById('login-phone-echo').textContent = phone;
+  if (!isResend) showLoginStep('code');
+  else toast('Code re-sent', 'info');
+  document.querySelector('.otp-box').focus();
+}
+async function loginVerifyCode() {
+  const code = getOtpValue();
+  if (code.length < 5) { toast('Enter the full code', 'error'); return; }
+  const data = await apiFetch(CONFIG.USERBOT_API_BASE, '/api/userbot/login/verify_code', {
+    method: 'POST', body: JSON.stringify({ pending_id: loginFlow.pendingId, code })
+  });
+  if (data && data.status === 'needs_2fa') { showLoginStep('2fa'); return; }
+  if (data && data.status === 'error') { toast(data.message || 'Invalid code', 'error'); return; }
+  // demo mode or success
+  if (!CONFIG.USERBOT_API_BASE && Math.random() < 0.3) { showLoginStep('2fa'); return; } // occasionally demo the 2FA path
+  completeLogin(data);
+}
+async function loginVerify2fa() {
+  const password = document.getElementById('login-2fa-pass').value;
+  if (!password) { toast('Enter your 2FA password', 'error'); return; }
+  const data = await apiFetch(CONFIG.USERBOT_API_BASE, '/api/userbot/login/verify_password', {
+    method: 'POST', body: JSON.stringify({ pending_id: loginFlow.pendingId, password })
+  });
+  if (data && data.status === 'error') { toast(data.message || 'Wrong password', 'error'); return; }
+  completeLogin(data);
+}
+function completeLogin(data) {
+  showLoginStep('done');
+  const acct = (data && data.account) || {
+    uid: 2119464081, slot: state.userbots.length, phone: loginFlow.phone,
+    name: 'New Account', status: 'running', uptime: 1, cmds: 0
+  };
+  state.userbots.push(acct);
+  renderUserbots();
+  addLog(`✅ Userbot ${acct.phone} deployed and running`, 'success');
+}
+function getOtpValue() {
+  return Array.from(document.querySelectorAll('.otp-box')).map(b => b.value).join('');
+}
+function wireOtpBoxes() {
+  const boxes = Array.from(document.querySelectorAll('.otp-box'));
+  boxes.forEach((box, idx) => {
+    box.addEventListener('input', () => {
+      box.value = box.value.replace(/[^0-9]/g,'').slice(0,1);
+      box.classList.toggle('filled', !!box.value);
+      if (box.value && boxes[idx+1]) boxes[idx+1].focus();
+    });
+    box.addEventListener('keydown', (e) => {
+      if (e.key === 'Backspace' && !box.value && boxes[idx-1]) boxes[idx-1].focus();
+    });
+    box.addEventListener('paste', (e) => {
+      const text = (e.clipboardData.getData('text') || '').replace(/[^0-9]/g,'');
+      if (text.length > 1) {
+        e.preventDefault();
+        text.split('').slice(0,boxes.length).forEach((ch,i) => { boxes[i].value = ch; boxes[i].classList.add('filled'); });
+        boxes[Math.min(text.length,boxes.length)-1].focus();
+      }
+    });
+  });
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Live inline-button "aliveness": press ripple on every .tg-btn
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.tg-btn');
+  if (!btn) return;
+  const rect = btn.getBoundingClientRect();
+  const ripple = document.createElement('span');
+  const size = Math.max(rect.width, rect.height);
+  ripple.className = 'ripple';
+  ripple.style.width = ripple.style.height = size + 'px';
+  ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+  ripple.style.top = (e.clientY - rect.top - size/2) + 'px';
+  btn.appendChild(ripple);
+  btn.classList.add('pressed');
+  setTimeout(() => { ripple.remove(); btn.classList.remove('pressed'); }, 450);
+});
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Hero chat — the one orchestrated landing-page animation
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function initHeroChat() {
+  const chat = document.getElementById('hero-chat');
+  if (!chat) return;
+  const script = [
+    { side: 'out', html: 'uploading <code>meme_bot.py</code>…' },
+    { side: 'typing' },
+    { side: 'in', html: '🛡️ Scan passed. No missing packages. Starting your bot now.' },
+    { side: 'in', html: '✅ <b>meme_bot.py</b> is running — PID 41209', kb: [
+      { label: '📋 Logs', cls: '' }, { label: '⏸ Stop', cls: '' }
+    ]},
+    { side: 'out', html: '/host +1 555 010 9284' },
+    { side: 'typing' },
+    { side: 'in', html: '📨 Code sent to your Telegram app. Reply with the 5-digit code.' },
+    { side: 'in', html: '✅ Signed in. Your userbot is now live on this account.', kb: [
+      { label: '📱 Manage', cls: 'teal' }, { label: '🔒 Log out', cls: 'teal' }
+    ]},
+  ];
+  let i = 0;
+  function trimChat() { while (chat.children.length > 5) chat.removeChild(chat.firstChild); }
+  function step() {
+    if (i >= script.length) { i = 0; setTimeout(step, 2600); return; }
+    const s = script[i++];
+    if (s.side === 'typing') {
+      const t = document.createElement('div');
+      t.className = 'tg-typing';
+      t.innerHTML = '<i></i><i></i><i></i>';
+      chat.appendChild(t); trimChat(); chat.scrollTop = chat.scrollHeight;
+      setTimeout(() => { t.remove(); step(); }, 900);
+      return;
+    }
+    const b = document.createElement('div');
+    b.className = 'tg-bubble ' + s.side;
+    b.innerHTML = s.html;
+    chat.appendChild(b);
+    if (s.kb) {
+      const kb = document.createElement('div');
+      kb.className = 'tg-inline-kb cols-2';
+      kb.innerHTML = s.kb.map(k => `<div class="tg-btn ${k.cls}">${k.label}</div>`).join('');
+      chat.appendChild(kb);
+    }
+    trimChat();
+    chat.scrollTop = chat.scrollHeight;
+    setTimeout(step, s.side === 'out' ? 700 : 1500);
+  }
+  step();
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Hero stat counters
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function countUp(id, target, suffix='') {
+  const el = document.getElementById(id);
+  if (!el) return;
+  let cur = 0;
+  const step = Math.max(1, Math.round(target / 40));
+  const t = setInterval(() => {
+    cur = Math.min(target, cur + step);
+    el.textContent = cur.toLocaleString() + suffix;
+    if (cur >= target) clearInterval(t);
+  }, 25);
+}
+function animateHeroStats() {
+  countUp('hs-bots', state.scripts.length + 51);
+  countUp('hs-userbots', state.userbots.length + 34);
+  countUp('hs-uptime', 99, '.9%');
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Init
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function init() {
+  renderScripts();
+  renderFiles();
+  renderUserbots();
+  wireOtpBoxes();
+  initHeroChat();
+  animateHeroStats();
+
+  // Show dashboard directly if linked to with #dashboard, otherwise land on the site
+  if (location.hash === '#dashboard') showApp(); else showSite();
+
+  // Try pulling real data once; silently keeps demo data if no backend is configured
+  refreshUserbotsFromApi().then(renderUserbots);
+
+  // Initial logs
+  const initLogs = [
+    ['🤖 SID Hosting Bot started', 'success'],
+    ['Flask keep-alive server running on :8080', 'info'],
+    ['Database initialized — loaded 247 users, 12 subscriptions', 'info'],
+    ['3 scripts running from previous session', 'success'],
+    ['Malware scanner active', 'success'],
+    ['Polling started...', 'dim'],
+  ];
+  initLogs.forEach(([m,l], i) => setTimeout(() => addLog(m, l), i * 300));
+
+  // Simulation ticks
+  setInterval(updateSystemStats, 3000);
+  setInterval(tickLog, 4500);
+  setInterval(updateUptime, 1000);
+  setInterval(() => {
+    if (document.getElementById('page-files').classList.contains('active')) renderFiles();
+  }, 5000);
+}
+
+document.addEventListener('DOMContentLoaded', init);
+
+// Close modals on background click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('open'); });
+});
+</script>
+</body>
+</html>
