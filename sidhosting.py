@@ -6,7 +6,7 @@ import psutil
 import signal
 import threading
 import subprocess
-from datetime import datetime
+from datetime import datetime, timedelta
 from fastapi import FastAPI, Depends, HTTPException, UploadFile, File, Header, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
@@ -160,7 +160,6 @@ def serve_dashboard():
 
 @app.get("/api/dashboard")
 def get_dashboard(db: Session = Depends(get_db)):
-    # Master Sync Endpoint
     scripts = db.query(Script).all()
     out_scripts = []
     for s in scripts:
@@ -379,3 +378,7 @@ def logout_userbot(uid: int, slot: int, db: Session = Depends(get_db)):
     db.query(UserbotAccount).filter(UserbotAccount.uid == uid, UserbotAccount.slot == slot).delete()
     db.commit()
     return {"status": "success"}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=int(os.getenv("PORT", 8080)))
