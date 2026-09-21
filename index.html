@@ -1172,7 +1172,7 @@ tbody tr:hover { background: rgba(255,255,255,0.03); }
     <div class="nav-section-label">Dashboard</div>
     <div class="nav-item active" onclick="nav('dashboard',this)">
       <span class="nav-icon">📊</span> Overview
-      <span class="nav-badge green" id="nav-running-count">3</span>
+      <span class="nav-badge green" id="nav-running-count">0</span>
     </div>
 
     <div class="nav-section-label">Bot Management</div>
@@ -1181,7 +1181,7 @@ tbody tr:hover { background: rgba(255,255,255,0.03); }
     </div>
     <div class="nav-item" onclick="nav('files',this)">
       <span class="nav-icon">📂</span> Manage Files
-      <span class="nav-badge" id="nav-file-count">5</span>
+      <span class="nav-badge" id="nav-file-count">0</span>
     </div>
     <div class="nav-item" onclick="nav('logs',this)">
       <span class="nav-icon">🖥️</span> Live Logs
@@ -1193,7 +1193,7 @@ tbody tr:hover { background: rgba(255,255,255,0.03); }
     <div class="nav-section-label">Userbot Hosting</div>
     <div class="nav-item" onclick="nav('userbots',this)">
       <span class="nav-icon">📱</span> Accounts
-      <span class="nav-badge" style="background:rgba(0,242,200,0.18);color:var(--accent3);border-color:rgba(0,242,200,0.3)" id="nav-userbot-count">2</span>
+      <span class="nav-badge" style="background:rgba(0,242,200,0.18);color:var(--accent3);border-color:rgba(0,242,200,0.3)" id="nav-userbot-count">0</span>
     </div>
     <div class="nav-item" onclick="openModal('add-account-modal');resetLoginFlow()">
       <span class="nav-icon">➕</span> Add Account
@@ -1202,7 +1202,7 @@ tbody tr:hover { background: rgba(255,255,255,0.03); }
     <div class="nav-section-label">Admin Tools</div>
     <div class="nav-item" onclick="nav('subscriptions',this)">
       <span class="nav-icon">💳</span> Subscriptions
-      <span class="nav-badge" id="nav-sub-count">12</span>
+      <span class="nav-badge" id="nav-sub-count">0</span>
     </div>
     <div class="nav-item" onclick="nav('admins',this)">
       <span class="nav-icon">👑</span> Admins
@@ -1249,7 +1249,7 @@ tbody tr:hover { background: rgba(255,255,255,0.03); }
       <div class="grid-4">
         <div class="card stat-card fade-in">
           <div class="stat-label">🤖 Running Scripts</div>
-          <div class="stat-value" id="stat-running" style="color:var(--success)">3</div>
+          <div class="stat-value" id="stat-running" style="color:var(--success)">0</div>
           <div class="stat-delta delta-up">▲ 1 since last hour</div>
           <div class="accent-bar" style="width:70%;background:linear-gradient(90deg,var(--success),#00c853)"></div>
         </div>
@@ -1267,8 +1267,8 @@ tbody tr:hover { background: rgba(255,255,255,0.03); }
         </div>
         <div class="card stat-card fade-in fade-in-d3">
           <div class="stat-label">📁 Uploaded Files</div>
-          <div class="stat-value" id="stat-files" style="color:var(--gold)">5</div>
-          <div class="stat-delta" style="color:var(--text-dim)">Across 3 users</div>
+          <div class="stat-value" id="stat-files" style="color:var(--gold)">0</div>
+          <div class="stat-delta" style="color:var(--text-dim)">Across all users</div>
           <div class="accent-bar" style="width:40%;background:linear-gradient(90deg,var(--gold),#ffd966)"></div>
         </div>
       </div>
@@ -1277,7 +1277,7 @@ tbody tr:hover { background: rgba(255,255,255,0.03); }
       <div class="grid-2">
         <div class="card fade-in fade-in-d1">
           <div class="section-header">
-            <div class="section-title">🟢 Running Scripts <small id="running-count-label">3 active</small></div>
+            <div class="section-title">🟢 Running Scripts <small id="running-count-label">0 active</small></div>
             <button class="btn btn-success" onclick="runAllScripts()">▶ Run All</button>
           </div>
           <div class="script-list" id="script-list">
@@ -1361,7 +1361,7 @@ tbody tr:hover { background: rgba(255,255,255,0.03); }
           </div>
           <div style="margin-top:16px;display:flex;gap:10px">
             <button class="btn btn-primary" style="flex:1" onclick="uploadScript(true)">🚀 Upload & Run Now</button>
-            <button class="btn btn-secondary" onclick="uploadScript(false,true)">📁 Upload Only</button>
+            <button class="btn btn-secondary" onclick="uploadScript(false)">📁 Upload Only</button>
           </div>
         </div>
         <div class="card fade-in fade-in-d1">
@@ -1434,7 +1434,7 @@ tbody tr:hover { background: rgba(255,255,255,0.03); }
           <table id="files-table">
             <thead>
               <tr>
-                <th>File Name</th><th>Type</th><th>Owner</th><th>Status</th><th>PID</th><th>Uptime</th><th>Actions</th>
+                <th>File Name</th><th>Type</th><th>Owner</th><th>Status</th><th>PID</th><th>Actions</th>
               </tr>
             </thead>
             <tbody id="files-tbody"></tbody>
@@ -1558,19 +1558,19 @@ tbody tr:hover { background: rgba(255,255,255,0.03); }
       <div class="grid-3 fade-in">
         <div class="card stat-card">
           <div class="stat-label">💳 Total Active</div>
-          <div class="stat-value" style="color:var(--accent)">12</div>
+          <div class="stat-value" id="stat-subs-total" style="color:var(--accent)">0</div>
           <div class="stat-delta delta-up">▲ 3 this week</div>
           <div class="accent-bar" style="width:60%;background:linear-gradient(90deg,var(--accent),var(--accent2))"></div>
         </div>
         <div class="card stat-card">
           <div class="stat-label">⏰ Expiring Soon</div>
-          <div class="stat-value" style="color:var(--warn)">3</div>
+          <div class="stat-value" id="stat-subs-warn" style="color:var(--warn)">0</div>
           <div class="stat-delta" style="color:var(--warn)">Within 7 days</div>
           <div class="accent-bar" style="width:25%;background:linear-gradient(90deg,var(--warn),#ffe066)"></div>
         </div>
         <div class="card stat-card">
           <div class="stat-label">❌ Expired</div>
-          <div class="stat-value" style="color:var(--danger)">2</div>
+          <div class="stat-value" id="stat-subs-expired" style="color:var(--danger)">0</div>
           <div class="stat-delta delta-down">▼ Auto-removed</div>
           <div class="accent-bar" style="width:15%;background:var(--danger)"></div>
         </div>
@@ -1619,9 +1619,9 @@ tbody tr:hover { background: rgba(255,255,255,0.03); }
           <div style="display:flex;gap:10px;margin-top:14px;align-items:center">
             <span style="font-size:12px;color:var(--text-dim)">Target:</span>
             <select id="broadcast-target" style="background:rgba(0,0,0,.3);border:1px solid var(--glass-border);color:var(--text);padding:8px 12px;border-radius:8px;font-size:13px;outline:none;flex:1">
-              <option value="all">All Users (247)</option>
-              <option value="subscribed">Subscribed Only (12)</option>
-              <option value="free">Free Users (235)</option>
+              <option value="all">All Users</option>
+              <option value="subscribed">Subscribed Only</option>
+              <option value="free">Free Users</option>
             </select>
           </div>
           <button class="btn btn-primary" style="width:100%;margin-top:12px;justify-content:center" onclick="sendBroadcast()">📢 Send Broadcast</button>
@@ -1760,118 +1760,287 @@ tbody tr:hover { background: rgba(255,255,255,0.03); }
 
 <script>
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// State
+// Real Backend API Configuration
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+const CONFIG = {
+  API_BASE: '', // Leave blank when hosting frontend and backend together on Railway
+  ADMIN_TOKEN: 'your_secure_password_here', // Must match your Railway Environment Variable
+};
+
 const state = {
+  scripts: [],
+  userbots: [],
+  logEntries: [],
+  subscriptions: [ // Fallbacks so UI doesn't look empty if DB route isn't added yet
+    { uid: 983241233, plan: 'Premium', expiry: '2025-07-20', daysLeft: 32 },
+    { uid: 771234561, plan: 'Standard', expiry: '2025-07-05', daysLeft: 17 }
+  ],
+  admins: [
+    { uid: 2119464081, username: '@Xricx0', role: 'owner', since: '2024-01-01' }
+  ],
+  broadcastHistory: [],
+  securityEvents: [],
   botLocked: false,
   logsPaused: false,
   startTime: Date.now(),
-  totalMessages: 14872,
-  totalBots: 53,
-  totalCmds: 2940,
-  scripts: [
-    { name: 'sidhosting.py', type: 'py', user: 2119464081, status: 'running', pid: 12345, uptime: 7240 },
-    { name: 'userbot_main.py', type: 'py', user: 983241233, status: 'running', pid: 12388, uptime: 3600 },
-    { name: 'notif_bot.js', type: 'js', user: 771234561, status: 'running', pid: 12401, uptime: 1800 },
-    { name: 'scraper.py', type: 'py', user: 555123456, status: 'stopped', pid: null, uptime: 0 },
-    { name: 'news_feed.js', type: 'js', user: 332198771, status: 'stopped', pid: null, uptime: 0 },
-  ],
-  subscriptions: [
-    { uid: 983241233, plan: 'Premium', expiry: '2025-07-20', daysLeft: 32 },
-    { uid: 771234561, plan: 'Standard', expiry: '2025-07-05', daysLeft: 17 },
-    { uid: 555123456, plan: 'Premium', expiry: '2025-06-25', daysLeft: 7 },
-    { uid: 332198771, plan: 'Standard', expiry: '2025-06-20', daysLeft: 2 },
-    { uid: 441092312, plan: 'Standard', expiry: '2025-06-18', daysLeft: 0 },
-    { uid: 112345671, plan: 'Expired', expiry: '2025-06-10', daysLeft: -8 },
-  ],
-  admins: [
-    { uid: 2119464081, username: '@Xricx0', role: 'owner', since: '2024-01-01' },
-    { uid: 771234561, username: '@AdminBot1', role: 'admin', since: '2024-03-15' },
-    { uid: 332198771, username: '@ModUser2', role: 'admin', since: '2024-05-01' },
-  ],
-  broadcastHistory: [],
-  logEntries: [],
-  securityEvents: [
-    { t: 'BLOCKED', msg: 'Blocked .exe upload from user 4481234', level: 'error' },
-    { t: 'SCAN', msg: 'All 5 scripts passed malware scan', level: 'success' },
-    { t: 'AUTH', msg: 'Admin login from @AdminBot1', level: 'info' },
-    { t: 'LOCK', msg: 'Bot was temporarily locked by Owner', level: 'warn' },
-  ],
-  userbots: [
-    { uid: 2119464081, slot: 0, phone: '+91••••••210', name: 'Owner Account', status: 'running', uptime: 51200, cmds: 812 },
-    { uid: 983241233, slot: 0, phone: '+1••••••047',  name: 'Alex\'s Userbot', status: 'running', uptime: 9040,  cmds: 214 },
-  ]
 };
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Backend config — fill these in once you deploy sidhosting.py /
-// lastuser.py with the API patch (see backend/README.md). Left blank,
-// the dashboard runs fully on demo data so the UI still feels alive.
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const CONFIG = {
-  BOT_API_BASE: '',      // e.g. 'https://your-sidhosting-host.example.com'
-  USERBOT_API_BASE: '',  // e.g. 'https://your-lastuser-host.example.com'
-  ADMIN_TOKEN: '',       // value of ADMIN_API_TOKEN set on the backend
-};
-async function apiFetch(base, path, opts = {}) {
+// --- Core Fetch Helper ---
+async function apiFetch(path, opts = {}) {
   try {
-    const url = (base || '').replace(/\/$/, '') + path; // '' base = same-origin relative fetch
-    const res = await fetch(url, {
-      ...opts,
-      headers: {
-        'Content-Type': 'application/json',
-        ...(CONFIG.ADMIN_TOKEN ? { 'Authorization': 'Bearer ' + CONFIG.ADMIN_TOKEN } : {}),
-        ...(opts.headers || {}),
-      },
-    });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const headers = {
+      'Authorization': 'Bearer ' + CONFIG.ADMIN_TOKEN,
+      ...(opts.headers || {})
+    };
+    // Do not set Content-Type if sending FormData (browser handles boundaries)
+    if (!(opts.body instanceof FormData) && !headers['Content-Type']) {
+      headers['Content-Type'] = 'application/json';
+    }
+
+    const res = await fetch(`${CONFIG.API_BASE}${path}`, { ...opts, headers });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || `HTTP ${res.status}`);
+    }
     return await res.json();
   } catch (e) {
-    console.warn('API unreachable, using demo data:', e.message);
+    console.error('API Error:', e);
+    // Suppress 404s in console to keep UI clean for non-implemented mock endpoints
+    if (!e.message.includes("404")) {
+      toast(e.message, 'error');
+    }
     return null;
   }
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Site ⇄ App view switching
+// Data Syncing (Polling)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function showApp() {
-  document.getElementById('site-view').style.display = 'none';
-  document.getElementById('app-view').style.display = 'block';
-  window.scrollTo(0,0);
-  history.replaceState(null, '', '#dashboard');
-}
-function showSite() {
-  document.getElementById('app-view').style.display = 'none';
-  document.getElementById('site-view').style.display = 'block';
-  window.scrollTo(0,0);
-  history.replaceState(null, '', '#');
+async function fetchAllData() {
+  const [scriptData, botData] = await Promise.all([
+    apiFetch('/api/scripts'),
+    apiFetch('/api/userbot/accounts')
+  ]);
+
+  if (scriptData && scriptData.scripts) {
+    state.scripts = scriptData.scripts;
+    renderScripts();
+    renderFiles();
+  }
+  
+  if (botData && botData.accounts) {
+    state.userbots = botData.accounts;
+    renderUserbots();
+  }
+  
+  updateDashboardStats();
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Navigation
+// Bot Hosting (Scripts)
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function nav(page, el) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('page-' + page).classList.add('active');
-  if (el) el.classList.add('active');
-  // Re-render on switch
-  if (page === 'files') renderFiles();
-  if (page === 'subscriptions') renderSubs();
-  if (page === 'admins') renderAdmins();
-  if (page === 'stats') { animateCounters(); renderWeeklyChart(); }
-  if (page === 'security') renderSecurityLog();
-  if (page === 'logs') renderMainLog();
-  if (page === 'userbots') renderUserbots();
+function handleFileSelect(input, isMain=false) {
+  const file = input.files[0];
+  if (!file) return;
+  const el = isMain ? document.getElementById('upload-zone-sub') : document.getElementById('file-name-display');
+  if (el) el.textContent = '📄 ' + file.name;
+}
+
+function handleDrop(e) {
+  e.preventDefault();
+  document.getElementById('main-drop-zone').classList.remove('drag-over');
+  const f = e.dataTransfer.files[0];
+  if (f) { 
+    document.getElementById('upload-zone-sub').textContent = '📄 ' + f.name;
+    document.getElementById('main-file-picker').files = e.dataTransfer.files;
+  }
+}
+
+async function uploadScript(run = true) {
+  const fileInput = document.getElementById('main-file-picker') || document.getElementById('file-picker');
+  const file = fileInput.files[0];
+  if (!file) { toast('Please select a file first', 'error'); return; }
+
+  const consoleEl = document.getElementById('upload-console');
+  if (consoleEl) consoleEl.innerHTML = `<div class="log-info">[${ts()}] Uploading ${file.name}...</div>`;
+
+  const formData = new FormData();
+  formData.append('file', file);
+  // Auto-install toggle logic
+  const installCb = document.getElementById('main-auto-install') || document.getElementById('auto-install');
+  if(installCb) formData.append('auto_install', installCb.checked);
+
+  const res = await apiFetch('/api/upload', {
+    method: 'POST',
+    body: formData
+  });
+
+  if (res && res.status === 'success') {
+    if (consoleEl) consoleEl.innerHTML += `<div class="log-success">[${ts()}] ✅ ${file.name} uploaded to database.</div>`;
+    toast(`${file.name} uploaded successfully`, 'success');
+    addLog(`Uploaded file: ${file.name}`, 'success');
+    await fetchAllData();
+    closeModal('upload-modal');
+    
+    // Automatically start it if `run` is true
+    if(run) {
+      // Small timeout to allow DB to propagate
+      setTimeout(async () => {
+        await fetchAllData(); 
+        const newScript = state.scripts.find(s => s.name === file.name);
+        if(newScript && newScript.status !== 'running') {
+            const index = state.scripts.indexOf(newScript);
+            startScript(index);
+        }
+      }, 500);
+    }
+  }
+}
+
+async function startScript(index) {
+  const script = state.scripts[index];
+  toast(`Starting ${script.name}...`, 'info');
+  addLog(`Attempting to start ${script.name}...`, 'info');
+  
+  const res = await apiFetch(`/api/scripts/${script.id}/start`, { method: 'POST' });
+  if (res && res.status === 'success') {
+    toast(`${script.name} is running! (PID: ${res.pid})`, 'success');
+    addLog(`Started ${script.name} successfully (PID ${res.pid})`, 'success');
+    await fetchAllData();
+  }
+}
+
+async function stopScript(index) {
+  const script = state.scripts[index];
+  toast(`Stopping ${script.name}...`, 'warn');
+  const res = await apiFetch(`/api/scripts/${script.id}/stop`, { method: 'POST' });
+  if (res) {
+    toast(`${script.name} stopped`, 'warn');
+    addLog(`Stopped ${script.name}`, 'warn');
+    await fetchAllData();
+  }
+}
+
+async function deleteScript(index) {
+  const script = state.scripts[index];
+  if (script.status === 'running') { toast('Stop the script before deleting', 'error'); return; }
+  
+  const res = await apiFetch(`/api/scripts/${script.id}`, { method: 'DELETE' });
+  if (res) {
+    toast(`${script.name} deleted`, 'info');
+    addLog(`Deleted script: ${script.name}`, 'info');
+    await fetchAllData();
+  }
+}
+
+function runAllScripts() {
+  state.scripts.forEach((s, i) => { 
+    if (s.status !== 'running') startScript(i); 
+  });
+  toast('Starting all stopped scripts...', 'info');
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Toast
+// Userbot Login Flow
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function toast(msg, type='info') {
-  const icons = { success:'✅', error:'❌', warn:'⚠️', info:'💡' };
-  const colors = { success:'var(--success)', error:'var(--danger)', warn:'var(--warn)', info:'var(--accent2)' };
+const loginFlow = { phone: '', pendingId: null };
+
+async function loginSendCode(isResend = false) {
+  const phone = document.getElementById('login-phone').value.trim() || loginFlow.phone;
+  if (phone.length < 7) { toast('Enter a valid phone number with country code', 'error'); return; }
+  loginFlow.phone = phone;
+
+  const btn = document.getElementById('btn-send-code');
+  if (btn) { btn.textContent = 'Sending…'; btn.disabled = true; }
+
+  const res = await apiFetch('/api/userbot/login/send_code', {
+    method: 'POST',
+    body: JSON.stringify({ phone })
+  });
+
+  if (btn) { btn.textContent = 'Send Code'; btn.disabled = false; }
+
+  if (res && res.status === 'success') {
+    loginFlow.pendingId = res.pending_id;
+    document.getElementById('login-phone-echo').textContent = phone;
+    showLoginStep('code');
+    if (isResend) toast('Code resent', 'info');
+    document.querySelector('.otp-box').focus();
+  }
+}
+
+async function loginVerifyCode() {
+  const code = Array.from(document.querySelectorAll('.otp-box')).map(b => b.value).join('');
+  if (code.length < 5) { toast('Enter the full verification code', 'error'); return; }
+
+  const res = await apiFetch('/api/userbot/login/verify_code', {
+    method: 'POST',
+    body: JSON.stringify({ pending_id: loginFlow.pendingId, code })
+  });
+
+  if (res && res.status === 'needs_2fa') {
+    showLoginStep('2fa');
+  } else if (res && res.status === 'success') {
+    showLoginStep('done');
+    addLog(`Userbot connected for ${loginFlow.phone}`, 'success');
+    await fetchAllData();
+  }
+}
+
+async function loginVerify2fa() {
+  const password = document.getElementById('login-2fa-pass').value;
+  if (!password) { toast('Enter your 2FA password', 'error'); return; }
+
+  const res = await apiFetch('/api/userbot/login/verify_password', {
+    method: 'POST',
+    body: JSON.stringify({ pending_id: loginFlow.pendingId, password })
+  });
+
+  if (res && res.status === 'success') {
+    showLoginStep('done');
+    addLog(`Userbot connected for ${loginFlow.phone} (2FA passed)`, 'success');
+    await fetchAllData();
+  }
+}
+
+async function logoutUserbot(index) {
+  const u = state.userbots[index];
+  if (!confirm(`Log out ${u.phone}? This revokes its session.`)) return;
+
+  const res = await apiFetch(`/api/userbot/accounts/${u.user_id}/${u.slot}`, { method: 'DELETE' });
+  if (res) {
+    toast('Account logged out successfully', 'info');
+    addLog(`Userbot ${u.phone} logged out`, 'info');
+    await fetchAllData();
+  }
+}
+
+async function startUserbot(i) {
+  // Mock function if starting existing userbot from UI
+  toast("Starting userbot...", "info");
+  const u = state.userbots[i];
+  if(!u.id) return;
+  await apiFetch(`/api/userbot/accounts/${u.user_id}/${u.slot}/start`, {method: 'POST'});
+  await fetchAllData();
+}
+
+async function stopUserbot(i, restart=false) {
+  // Mock function if stopping/restarting existing userbot from UI
+  const u = state.userbots[i];
+  if(!u.id) return;
+  toast(`${restart ? "Restarting" : "Stopping"} userbot...`, "warn");
+  await apiFetch(`/api/userbot/accounts/${u.user_id}/${u.slot}/${restart ? 'restart' : 'stop'}`, {method: 'POST'});
+  await fetchAllData();
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Logs and Commands
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+function ts() { return new Date().toTimeString().slice(0, 8); }
+
+function toast(msg, type = 'info') {
+  const icons = { success: '✅', error: '❌', warn: '⚠️', info: '💡' };
+  const colors = { success: 'var(--success)', error: 'var(--danger)', warn: 'var(--warn)', info: 'var(--accent2)' };
   const t = document.createElement('div');
   t.className = 'toast';
   t.style.borderColor = colors[type];
@@ -1880,16 +2049,6 @@ function toast(msg, type='info') {
   setTimeout(() => t.remove(), 3500);
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Modals
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function openModal(id) { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Log System
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function ts() { return new Date().toTimeString().slice(0,8); }
 function addLog(msg, level='info') {
   const cls = { info:'log-info', success:'log-success', warn:'log-warn', error:'log-error', dim:'log-dim' }[level] || 'log-info';
   const entry = { msg, level, time: ts(), cls };
@@ -1904,209 +2063,78 @@ function addLog(msg, level='info') {
     if (mLog) { mLog.innerHTML += line; mLog.scrollTop = mLog.scrollHeight; }
   }
 }
-function renderMainLog() {
-  const el = document.getElementById('main-log');
-  if (!el) return;
-  el.innerHTML = state.logEntries.map(e => `<div class="${e.cls}">[${e.time}] ${e.msg}</div>`).join('');
-  el.scrollTop = el.scrollHeight;
-}
+
 function clearLogs() {
   state.logEntries = [];
   ['main-log','activity-log'].forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML = ''; });
   toast('Logs cleared','info');
 }
-let pauseTimeoutRef;
+
 function pauseLogs() {
   state.logsPaused = !state.logsPaused;
   const btn = document.getElementById('pause-btn');
   const ind = document.getElementById('live-indicator');
   btn.textContent = state.logsPaused ? '▶ Resume' : '⏸ Pause';
-  if (ind) { ind.textContent = state.logsPaused ? '⏸ PAUSED' : '● LIVE'; ind.style.color = state.logsPaused ? 'var(--warn)' : 'var(--success)'; }
+  if (ind) { 
+      ind.textContent = state.logsPaused ? '⏸ PAUSED' : '● LIVE'; 
+      ind.style.color = state.logsPaused ? 'var(--warn)' : 'var(--success)'; 
+  }
 }
+
 function filterLog(type) {
   const el = document.getElementById('main-log');
   if (!el) return;
-  const filtered = type === 'all' ? state.logEntries :
-    state.logEntries.filter(e => e.level === type);
+  const filtered = type === 'all' ? state.logEntries : state.logEntries.filter(e => e.level === type);
   el.innerHTML = filtered.map(e => `<div class="${e.cls}">[${e.time}] ${e.msg}</div>`).join('');
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Scripts
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function fmtUptime(s) {
-  if (!s) return '--';
-  const h = Math.floor(s/3600), m = Math.floor((s%3600)/60), ss = s%60;
-  return [h,m,ss].map(x=>String(x).padStart(2,'0')).join(':');
-}
-function renderScripts() {
-  const list = document.getElementById('script-list');
-  if (!list) return;
-  const running = state.scripts.filter(s => s.status === 'running');
-  document.getElementById('running-count-label').textContent = running.length + ' active';
-  document.getElementById('stat-running').textContent = running.length;
-  document.getElementById('nav-running-count').textContent = running.length;
-
-  list.innerHTML = state.scripts.map((s,i) => `
-    <div class="script-item" id="sci-${i}">
-      <div class="script-status-dot ${s.status==='running'?'dot-running':s.status==='pending'?'dot-pending':'dot-stopped'}"></div>
-      <div class="script-info">
-        <div class="script-name">${s.name}</div>
-        <div class="script-meta">${s.type.toUpperCase()} • User: ${s.user} • ${s.status==='running'?'PID: '+s.pid+' • '+fmtUptime(s.uptime):'Stopped'}</div>
-      </div>
-      <div class="script-actions">
-        ${s.status!=='running'
-          ? `<button class="btn-icon run" data-tip="Start" onclick="startScript(${i})">▶</button>`
-          : `<button class="btn-icon stop" data-tip="Stop" onclick="stopScript(${i})">■</button>`}
-        <button class="btn-icon" data-tip="View Logs" onclick="nav('logs',document.querySelectorAll('.nav-item')[4])">📋</button>
-        <button class="btn-icon del" data-tip="Delete" onclick="deleteScript(${i})">🗑</button>
-      </div>
-    </div>`).join('');
-}
-function startScript(i) {
-  state.scripts[i].status = 'pending';
-  renderScripts();
-  addLog(`Starting script: ${state.scripts[i].name}...`, 'info');
+function sendCmd() {
+  const inp = document.getElementById('cmd-input');
+  const cmd = inp.value.trim();
+  if (!cmd) return;
+  const log = document.getElementById('cmd-log');
+  if (log.innerHTML.includes('No commands')) log.innerHTML = '';
+  log.innerHTML += `<div class="log-info">[${ts()}] $ ${cmd}</div>`;
+  
+  // Fake API interaction for commands (since backend wasn't defined for this)
   setTimeout(() => {
-    state.scripts[i].status = 'running';
-    state.scripts[i].pid = Math.floor(10000 + Math.random()*5000);
-    state.scripts[i].uptime = 1;
-    renderScripts(); renderFiles();
-    addLog(`✅ Script ${state.scripts[i].name} started (PID: ${state.scripts[i].pid})`, 'success');
-    toast(`${state.scripts[i].name} is running`, 'success');
-  }, 1800);
-}
-function stopScript(i) {
-  const s = state.scripts[i];
-  addLog(`Stopping ${s.name} (PID: ${s.pid})...`, 'warn');
-  s.status = 'stopped'; s.pid = null; s.uptime = 0;
-  renderScripts(); renderFiles();
-  toast(`${s.name} stopped`, 'warn');
-}
-function deleteScript(i) {
-  const s = state.scripts[i];
-  if (s.status === 'running') { toast('Stop the script first before deleting', 'error'); return; }
-  state.scripts.splice(i, 1);
-  renderScripts(); renderFiles();
-  addLog(`Deleted script: ${s.name}`, 'warn');
-  toast(`${s.name} deleted`, 'info');
-  document.getElementById('stat-files').textContent = state.scripts.length;
-  document.getElementById('nav-file-count').textContent = state.scripts.length;
-}
-function runAllScripts() {
-  state.scripts.forEach((_,i) => { if (state.scripts[i].status !== 'running') startScript(i); });
-  toast('Starting all stopped scripts...', 'info');
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Files Table
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function renderFiles() {
-  const tb = document.getElementById('files-tbody');
-  if (!tb) return;
-  tb.innerHTML = state.scripts.map((s,i) => `<tr>
-    <td style="font-family:monospace;font-size:13px">${s.name}</td>
-    <td><span class="tag" style="background:rgba(${s.type==='py'?'79,172,254':'248,87,166'},0.12);color:${s.type==='py'?'var(--accent2)':'var(--accent4)'};border-color:rgba(${s.type==='py'?'79,172,254':'248,87,166'},0.3)">${s.type==='py'?'🐍 Python':'🟡 JS'}</span></td>
-    <td style="font-size:12px;color:var(--text-dim)">${s.user}</td>
-    <td><span class="tag ${s.status==='running'?'tag-active':'tag-expired'}">${s.status==='running'?'● Running':'○ Stopped'}</span></td>
-    <td style="font-family:monospace;font-size:12px;color:var(--text-dim)">${s.pid || '—'}</td>
-    <td style="font-size:12px;color:var(--text-dim)">${fmtUptime(s.uptime)}</td>
-    <td>
-      <div style="display:flex;gap:6px">
-        ${s.status!=='running'
-          ? `<button class="btn btn-success" style="font-size:11px;padding:5px 10px" onclick="startScript(${i})">▶ Start</button>`
-          : `<button class="btn btn-danger" style="font-size:11px;padding:5px 10px" onclick="stopScript(${i})">■ Stop</button>`}
-        <button class="btn btn-secondary" style="font-size:11px;padding:5px 10px" onclick="deleteScript(${i})">🗑</button>
-      </div>
-    </td>
-  </tr>`).join('');
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Upload
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function handleFileSelect(input, isMain=false) {
-  const file = input.files[0];
-  if (!file) return;
-  const el = isMain ? document.getElementById('upload-zone-sub') : document.getElementById('file-name-display');
-  if (el) el.textContent = '📄 ' + file.name;
-}
-function handleDrop(e) {
-  e.preventDefault();
-  document.getElementById('main-drop-zone').classList.remove('drag-over');
-  const f = e.dataTransfer.files[0];
-  if (f) { document.getElementById('upload-zone-sub').textContent = '📄 ' + f.name; }
-}
-function consoleLog(msg, level='dim', target='upload-console') {
-  const cls = { success:'log-success',error:'log-error',warn:'log-warn',info:'log-info',dim:'log-dim' }[level];
-  const el = document.getElementById(target);
-  if (el) { el.innerHTML += `<div class="${cls}">[${ts()}] ${msg}</div>`; el.scrollTop = el.scrollHeight; }
-}
-function uploadScript(run=true, saveOnly=false) {
-  const console_ = document.getElementById('upload-console');
-  if (console_) console_.innerHTML = '';
-  const fakeFile = `bot_script_${Date.now()}.py`;
-  const steps = [
-    [0,   'dim',     `Receiving file: ${fakeFile}`],
-    [400, 'info',    'Running malware signature scan...'],
-    [900, 'success', '✅ No threats detected — file is clean'],
-    [1300,'info',    'Checking Python syntax...'],
-    [1800,'success', '✅ Syntax OK'],
-    [2200,'info',    'Installing missing packages (telebot, psutil)...'],
-    [2900,'success', '✅ Packages installed successfully'],
-    [3300,'info',    `Launching ${fakeFile}...`],
-    [3900,'success', `🚀 Script is RUNNING (PID: ${Math.floor(10000+Math.random()*5000)})`],
-  ];
-  steps.forEach(([delay, level, msg]) => setTimeout(() => consoleLog(msg, level), delay));
-  setTimeout(() => {
-    const newScript = {
-      name: fakeFile, type: 'py',
-      user: 2119464081, status: run ? 'running' : 'stopped',
-      pid: run ? Math.floor(10000+Math.random()*5000) : null,
-      uptime: run ? 1 : 0
+    const responses = {
+      '/status': '📊 Bot: Online | DB Synced | Load: Normal',
+      '/ping': '🏓 Pong! Latency: 42ms',
+      '/restart': '🔄 Restart signal sent to manager...',
+      '/stop_all': '🛑 Broadcast stop sent...',
+      '/logs': '📋 Tailing logs...',
     };
-    state.scripts.push(newScript);
-    renderScripts(); renderFiles();
-    document.getElementById('stat-files').textContent = state.scripts.length;
-    document.getElementById('nav-file-count').textContent = state.scripts.length;
-    addLog(`Uploaded and ${run?'running':'saved'}: ${fakeFile}`, 'success');
-    toast(run ? `${fakeFile} is now running!` : `${fakeFile} uploaded`, 'success');
-  }, 4200);
-  closeModal('upload-modal');
+    const reply = responses[cmd] || `Command "${cmd}" received.`;
+    log.innerHTML += `<div class="log-success">[${ts()}] ${reply}</div>`;
+    log.scrollTop = log.scrollHeight;
+  }, 400);
+  addLog(`Executed remote command: ${cmd}`, 'info');
+  inp.value = '';
+}
+
+function quickCmd(cmd) {
+  document.getElementById('cmd-input').value = cmd;
+  sendCmd();
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Subscriptions
+// Administrative Functions
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function renderSubs() {
-  const tb = document.getElementById('sub-tbody');
-  if (!tb) return;
-  tb.innerHTML = state.subscriptions.map((s,i) => `<tr>
-    <td style="font-family:monospace;font-size:13px">${s.uid}</td>
-    <td><span class="tag tag-active" style="${s.daysLeft<=0?'background:rgba(255,77,109,0.12);color:var(--danger);border-color:rgba(255,77,109,0.25)':''}">${s.plan}</span></td>
-    <td style="font-size:12px">${s.expiry}</td>
-    <td style="font-size:13px;font-weight:600;color:${s.daysLeft<=0?'var(--danger)':s.daysLeft<=7?'var(--warn)':'var(--success)'}">${s.daysLeft>0?s.daysLeft+' days':'Expired'}</td>
-    <td><span class="tag ${s.daysLeft>0?'tag-active':'tag-expired'}">${s.daysLeft>0?'Active':'Expired'}</span></td>
-    <td>
-      <div style="display:flex;gap:6px">
-        <button class="btn btn-secondary" style="font-size:11px;padding:5px 10px" onclick="extendSub(${i})">+30d</button>
-        <button class="btn btn-danger" style="font-size:11px;padding:5px 10px" onclick="removeSub(${i})">Remove</button>
-      </div>
-    </td>
-  </tr>`).join('');
-}
 function addSubscription() {
   const uid = parseInt(document.getElementById('sub-uid').value);
   const days = parseInt(document.getElementById('sub-days').value);
   if (!uid || !days) { toast('Enter valid User ID and days', 'error'); return; }
   const expiry = new Date(Date.now() + days*86400000).toISOString().slice(0,10);
+  
+  // Local state update (mocking backend)
   state.subscriptions.unshift({ uid, plan: 'Premium', expiry, daysLeft: days });
   renderSubs();
-  document.getElementById('stat-subs').textContent = state.subscriptions.filter(s=>s.daysLeft>0).length;
   addLog(`Subscription added for ${uid} (${days} days)`, 'success');
   toast(`Subscription activated for ${uid}`, 'success');
   closeModal('sub-modal');
 }
+
 function extendSub(i) {
   state.subscriptions[i].daysLeft += 30;
   const d = new Date(state.subscriptions[i].expiry);
@@ -2115,13 +2143,14 @@ function extendSub(i) {
   renderSubs();
   toast(`Extended by 30 days`, 'success');
 }
+
 function removeSub(i) {
   const uid = state.subscriptions[i].uid;
   state.subscriptions.splice(i, 1);
   renderSubs();
-  addLog(`Subscription removed for ${uid}`, 'warn');
   toast(`Subscription removed`, 'info');
 }
+
 function checkSubModal() {
   const uid = prompt('Enter User ID to check:');
   if (!uid) return;
@@ -2133,21 +2162,6 @@ function checkSubModal() {
   }
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Admins
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function renderAdmins() {
-  const tb = document.getElementById('admin-tbody');
-  if (!tb) return;
-  tb.innerHTML = state.admins.map((a,i) => `<tr>
-    <td style="font-family:monospace;font-size:13px">${a.uid}</td>
-    <td>${a.username}</td>
-    <td><span class="tag ${a.role==='owner'?'tag-owner':'tag-admin'}">${a.role==='owner'?'👑 Owner':'🛡️ Admin'}</span></td>
-    <td style="font-size:12px;color:var(--text-dim)">${a.since}</td>
-    <td>${a.role!=='owner'?`<button class="btn btn-danger" style="font-size:11px;padding:5px 10px" onclick="removeAdmin(${i})">Remove</button>`:
-    '<span style="font-size:12px;color:var(--text-muted)">Owner</span>'}</td>
-  </tr>`).join('');
-}
 function addAdmin() {
   const uid = parseInt(document.getElementById('admin-uid').value);
   if (!uid) { toast('Enter valid User ID', 'error'); return; }
@@ -2158,17 +2172,14 @@ function addAdmin() {
   toast(`User ${uid} promoted to Admin`, 'success');
   closeModal('admin-modal');
 }
+
 function removeAdmin(i) {
   const uid = state.admins[i].uid;
   state.admins.splice(i, 1);
   renderAdmins();
-  addLog(`Admin removed: ${uid}`, 'warn');
   toast(`Admin ${uid} removed`, 'info');
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Broadcast
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function sendBroadcast() {
   const msg = document.getElementById('broadcast-msg').value.trim();
   const target = document.getElementById('broadcast-target').value;
@@ -2180,20 +2191,7 @@ function sendBroadcast() {
   addLog(`Broadcast sent to ${targets[target]} users`, 'success');
   toast(`Broadcast sent to ${targets[target]} users!`, 'success');
 }
-function renderBroadcastHistory() {
-  const el = document.getElementById('broadcast-history');
-  if (!el) return;
-  if (!state.broadcastHistory.length) { el.innerHTML = '<div style="font-size:13px;color:var(--text-dim);text-align:center;padding:20px">No broadcasts yet</div>'; return; }
-  el.innerHTML = state.broadcastHistory.map(b => `
-    <div class="script-item" style="flex-direction:column;align-items:flex-start">
-      <div style="font-size:12px;color:var(--text-dim);margin-bottom:4px">${b.time} • ${b.target} (${b.count} users)</div>
-      <div style="font-size:13px;word-break:break-word">${b.msg}</div>
-    </div>`).join('');
-}
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Bot Lock
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function toggleBotLock() {
   state.botLocked = !state.botLocked;
   const banner = document.getElementById('lock-banner');
@@ -2207,281 +2205,212 @@ function toggleBotLock() {
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Command
+// UI Renderers & Updates
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function sendCmd() {
-  const inp = document.getElementById('cmd-input');
-  const cmd = inp.value.trim();
-  if (!cmd) return;
-  const log = document.getElementById('cmd-log');
-  if (log.innerHTML.includes('No commands')) log.innerHTML = '';
-  log.innerHTML += `<div class="log-info">[${ts()}] $ ${cmd}</div>`;
-  setTimeout(() => {
-    const responses = {
-      '/status': '📊 Bot: Online | Scripts: ' + state.scripts.filter(s=>s.status==='running').length + ' running | Users: 247',
-      '/ping': '🏓 Pong! Latency: 74ms',
-      '/restart': '🔄 Restarting all scripts...',
-      '/stop_all': '🛑 Stopping all running scripts...',
-      '/logs': '📋 Last 50 log entries sent to admin.',
-    };
-    const reply = responses[cmd] || `Command "${cmd}" executed successfully.`;
-    log.innerHTML += `<div class="log-success">[${ts()}] ${reply}</div>`;
-    log.scrollTop = log.scrollHeight;
-  }, 600);
-  addLog(`Command sent: ${cmd}`, 'info');
-  inp.value = '';
-}
-function quickCmd(cmd) {
-  document.getElementById('cmd-input').value = cmd;
-  sendCmd();
-}
+function renderScripts() {
+  const list = document.getElementById('script-list');
+  if (!list) return;
+  const running = state.scripts.filter(s => s.status === 'running');
+  
+  // Dashboard sync
+  document.getElementById('nav-running-count').textContent = running.length;
+  document.getElementById('stat-running').textContent = running.length;
+  document.getElementById('stat-files').textContent = state.scripts.length;
+  document.getElementById('nav-file-count').textContent = state.scripts.length;
+  document.getElementById('running-count-label').textContent = running.length + " active";
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Statistics
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function animateCounters() {
-  function animCount(id, target, suffix='') {
-    const el = document.getElementById(id);
-    if (!el) return;
-    let current = 0;
-    const step = Math.ceil(target / 60);
-    const t = setInterval(() => {
-      current = Math.min(current + step, target);
-      el.textContent = current.toLocaleString() + suffix;
-      if (current >= target) clearInterval(t);
-    }, 16);
+  if (state.scripts.length === 0) {
+      list.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text-dim)">No scripts deployed yet.</div>`;
+      return;
   }
-  animCount('anim-msgs', state.totalMessages);
-  animCount('anim-bots', state.totalBots);
-  animCount('anim-cmds', state.totalCmds);
-}
-function renderWeeklyChart() {
-  const el = document.getElementById('weekly-chart');
-  if (!el) return;
-  const vals = [62, 85, 45, 93, 78, 55, 88];
-  el.innerHTML = vals.map(v => `
-    <div class="chart-bar-wrap">
-      <div class="chart-bar-bg" style="height:100px">
-        <div class="chart-bar-fill" style="height:0%;background:linear-gradient(0deg,var(--accent),var(--accent2))" data-target="${v}"></div>
+
+  list.innerHTML = state.scripts.map((s, i) => `
+    <div class="script-item">
+      <div class="script-status-dot ${s.status === 'running' ? 'dot-running' : 'dot-stopped'}"></div>
+      <div class="script-info">
+        <div class="script-name">${s.name}</div>
+        <div class="script-meta">${(s.file_type || 'PY').toUpperCase()} • ID: ${s.id || '-'} • ${s.status === 'running' ? 'PID: ' + (s.pid||'sys') : 'Stopped'}</div>
+      </div>
+      <div class="script-actions">
+        ${s.status !== 'running'
+          ? `<button class="btn-icon run" data-tip="Start" onclick="startScript(${i})">▶</button>`
+          : `<button class="btn-icon stop" data-tip="Stop" onclick="stopScript(${i})">■</button>`}
+        <button class="btn-icon" data-tip="View Logs" onclick="nav('logs',document.querySelectorAll('.nav-item')[4])">📋</button>
+        <button class="btn-icon del" data-tip="Delete" onclick="deleteScript(${i})">🗑</button>
       </div>
     </div>`).join('');
-  setTimeout(() => {
-    el.querySelectorAll('.chart-bar-fill').forEach(b => {
-      b.style.height = b.dataset.target + '%';
-    });
-  }, 100);
-}
-function updateUptime() {
-  const el = document.getElementById('uptime-display');
-  if (!el) return;
-  const secs = Math.floor((Date.now() - state.startTime) / 1000);
-  const h = Math.floor(secs/3600), m = Math.floor((secs%3600)/60), s = secs%60;
-  el.textContent = [h,m,s].map(x=>String(x).padStart(2,'0')).join(':');
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Security Log
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function renderSecurityLog() {
-  const el = document.getElementById('security-log');
-  if (!el) return;
-  const cls = { error:'log-error', success:'log-success', warn:'log-warn', info:'log-info' };
-  el.innerHTML = state.securityEvents.map(e =>
-    `<div class="${cls[e.level]}">[${ts()}] [${e.t}] ${e.msg}</div>`
-  ).join('');
+function renderFiles() {
+  const tb = document.getElementById('files-tbody');
+  if (!tb) return;
+  tb.innerHTML = state.scripts.map((s, i) => `<tr>
+    <td style="font-family:monospace;font-size:13px">${s.name}</td>
+    <td><span class="tag" style="background:rgba(79,172,254,0.12);color:var(--accent2)">${(s.file_type || 'py').toUpperCase()}</span></td>
+    <td style="font-size:12px;color:var(--text-dim)">${s.user_id || 'Owner'}</td>
+    <td><span class="tag ${s.status === 'running' ? 'tag-active' : 'tag-expired'}">${s.status}</span></td>
+    <td style="font-family:monospace;font-size:12px">${s.pid || '—'}</td>
+    <td>
+      <div style="display:flex;gap:6px">
+        ${s.status !== 'running'
+          ? `<button class="btn btn-success" style="font-size:11px;padding:5px 10px" onclick="startScript(${i})">▶ Start</button>`
+          : `<button class="btn btn-danger" style="font-size:11px;padding:5px 10px" onclick="stopScript(${i})">■ Stop</button>`}
+        <button class="btn btn-secondary" style="font-size:11px;padding:5px 10px" onclick="deleteScript(${i})">🗑</button>
+      </div>
+    </td>
+  </tr>`).join('');
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Speed / System simulation
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function updateSystemStats() {
-  const cpu = 20 + Math.random() * 40;
-  const mem = 45 + Math.random() * 25;
-  const lat = 50 + Math.random() * 80;
-  const cpuBar = document.getElementById('cpu-bar');
-  const memBar = document.getElementById('mem-bar');
-  const cpuVal = document.getElementById('cpu-val');
-  const memVal = document.getElementById('mem-val');
-  const speedNum = document.getElementById('speed-num');
-  const speedArc = document.getElementById('speed-arc');
-  if (cpuBar) cpuBar.style.width = cpu + '%';
-  if (memBar) memBar.style.width = mem + '%';
-  if (cpuVal) cpuVal.textContent = Math.round(cpu) + '%';
-  if (memVal) memVal.textContent = Math.round(mem) + '%';
-  if (speedNum) speedNum.textContent = Math.round(lat);
-  if (speedArc) {
-    const pct = 1 - (lat / 200);
-    speedArc.setAttribute('stroke-dashoffset', 220 * (1 - pct));
-  }
-  // Update uptime of running scripts
-  state.scripts.forEach(s => { if (s.status === 'running') s.uptime++; });
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Live log simulation
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const logMessages = [
-  ['Bot polling started.', 'info'],
-  ['User 2119464081 sent /start', 'dim'],
-  ['Script sidhosting.py — heartbeat OK', 'success'],
-  ['userbot_main.py — event dispatched', 'dim'],
-  ['User 771234561 uploaded notif_bot.js', 'info'],
-  ['Malware scan passed for notif_bot.js', 'success'],
-  ['Package telebot installed successfully', 'success'],
-  ['PID 12345 memory: 42.1 MB', 'dim'],
-  ['Broadcast sent to 247 users', 'info'],
-  ['ReadTimeout — polling restarted', 'warn'],
-  ['User 441092312 subscription expired', 'warn'],
-  ['Admin @AdminBot1 logged in', 'info'],
-  ['Blocked upload: malware.exe — ELF signature', 'error'],
-  ['Script userbot_main.py — 3600s uptime', 'success'],
-];
-let logIdx = 0;
-function tickLog() {
-  const [msg, lvl] = logMessages[logIdx % logMessages.length];
-  addLog(msg, lvl); logIdx++;
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Userbot accounts
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-async function refreshUserbotsFromApi() {
-  const data = await apiFetch(CONFIG.USERBOT_API_BASE, '/api/userbot/accounts');
-  if (data && Array.isArray(data.accounts)) { state.userbots = data.accounts; }
-}
 function renderUserbots() {
   const list = document.getElementById('userbot-list');
   if (!list) return;
+  
   const running = state.userbots.filter(u => u.status === 'running');
+  
   document.getElementById('nav-userbot-count').textContent = state.userbots.length;
-  document.getElementById('ub-stat-running').textContent = running.length;
   document.getElementById('ub-stat-total').textContent = state.userbots.length;
-  document.getElementById('ub-stat-cmds').textContent = state.userbots.reduce((a,u)=>a+(u.cmds||0),0);
+  document.getElementById('ub-stat-running').textContent = running.length;
+  
+  // Sum up commands (mock feature for UI completeness)
+  document.getElementById('ub-stat-cmds').textContent = state.userbots.reduce((a,u) => a+(u.cmds_run||0), 0);
 
-  if (!state.userbots.length) {
-    list.innerHTML = `<div style="text-align:center;padding:40px 0;color:var(--text-dim)">
-      No userbot accounts yet. <span style="color:var(--accent3);cursor:pointer" onclick="openModal('add-account-modal');resetLoginFlow()">Add your first account →</span>
-    </div>`;
+  if (state.userbots.length === 0) {
+    list.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-dim)">No active accounts.</div>`;
     return;
   }
-  list.innerHTML = state.userbots.map((u,i) => `
+
+  list.innerHTML = state.userbots.map((u, i) => `
     <div class="userbot-card">
       <div class="userbot-avatar">${(u.name||'U')[0].toUpperCase()}</div>
       <div class="userbot-info">
-        <div class="userbot-phone">${u.phone} <span style="color:var(--text-dim);font-weight:400;font-family:var(--font-body)">— ${u.name||'Userbot'}</span></div>
+        <div class="userbot-phone">${u.phone}</div>
         <div class="userbot-meta">
           <span class="script-status-dot ${u.status==='running'?'dot-running':'dot-stopped'}" style="display:inline-block;width:7px;height:7px;margin-right:5px"></span>
-          ${u.status==='running' ? 'Online • ' + fmtUptime(u.uptime) : 'Stopped'} · ${u.cmds||0} commands run
+          ${u.status === 'running' ? 'Online' : 'Stopped'} • ${u.cmds_run||0} commands
         </div>
       </div>
       <div class="userbot-actions">
-        ${u.status!=='running'
-          ? `<button class="btn-icon run" data-tip="Start" onclick="startUserbot(${i})">▶</button>`
-          : `<button class="btn-icon stop" data-tip="Restart" onclick="stopUserbot(${i},true)">↻</button>`}
-        ${u.status==='running' ? `<button class="btn-icon stop" data-tip="Stop" onclick="stopUserbot(${i})">■</button>` : ''}
-        <button class="btn-icon del" data-tip="Log out" onclick="logoutUserbot(${i})">🗑</button>
+        ${u.status !== 'running' 
+          ? `<button class="btn-icon run" onclick="startUserbot(${i})">▶</button>` 
+          : `<button class="btn-icon stop" onclick="stopUserbot(${i},true)">↻</button><button class="btn-icon stop" onclick="stopUserbot(${i})">■</button>`}
+        <button class="btn-icon del" onclick="logoutUserbot(${i})">🗑</button>
       </div>
     </div>`).join('');
 }
-async function startUserbot(i) {
-  const u = state.userbots[i];
-  addLog(`Starting userbot ${u.phone}...`, 'info');
-  const res = await apiFetch(CONFIG.USERBOT_API_BASE, `/api/userbot/accounts/${u.uid}/${u.slot}/start`, { method:'POST' });
-  u.status = 'running'; u.uptime = 1;
-  renderUserbots();
-  toast(`${u.phone} is live`, 'success');
-  addLog(`✅ Userbot ${u.phone} started`, 'success');
+
+function renderSubs() {
+  const tb = document.getElementById('sub-tbody');
+  if (!tb) return;
+  
+  let total = 0, warn = 0, exp = 0;
+  
+  tb.innerHTML = state.subscriptions.map((s,i) => {
+    if (s.daysLeft > 7) total++;
+    else if (s.daysLeft > 0) warn++;
+    else exp++;
+
+    return `<tr>
+      <td style="font-family:monospace;font-size:13px">${s.uid}</td>
+      <td><span class="tag tag-active" style="${s.daysLeft<=0?'background:rgba(255,77,109,0.12);color:var(--danger);border-color:rgba(255,77,109,0.25)':''}">${s.plan}</span></td>
+      <td style="font-size:12px">${s.expiry}</td>
+      <td style="font-size:13px;font-weight:600;color:${s.daysLeft<=0?'var(--danger)':s.daysLeft<=7?'var(--warn)':'var(--success)'}">${s.daysLeft>0?s.daysLeft+' days':'Expired'}</td>
+      <td><span class="tag ${s.daysLeft>0?'tag-active':'tag-expired'}">${s.daysLeft>0?'Active':'Expired'}</span></td>
+      <td>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-secondary" style="font-size:11px;padding:5px 10px" onclick="extendSub(${i})">+30d</button>
+          <button class="btn btn-danger" style="font-size:11px;padding:5px 10px" onclick="removeSub(${i})">Remove</button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+  
+  document.getElementById('stat-subs-total').textContent = total + warn;
+  document.getElementById('stat-subs-warn').textContent = warn;
+  document.getElementById('stat-subs-expired').textContent = exp;
+  document.getElementById('nav-sub-count').textContent = total + warn;
 }
-async function stopUserbot(i, restart=false) {
-  const u = state.userbots[i];
-  addLog(`${restart?'Restarting':'Stopping'} userbot ${u.phone}...`, 'warn');
-  await apiFetch(CONFIG.USERBOT_API_BASE, `/api/userbot/accounts/${u.uid}/${u.slot}/${restart?'restart':'stop'}`, { method:'POST' });
-  if (restart) { u.uptime = 1; toast(`${u.phone} restarted`, 'success'); }
-  else { u.status = 'stopped'; u.uptime = 0; toast(`${u.phone} stopped`, 'warn'); }
-  renderUserbots();
+
+function renderAdmins() {
+  const tb = document.getElementById('admin-tbody');
+  if (!tb) return;
+  tb.innerHTML = state.admins.map((a,i) => `<tr>
+    <td style="font-family:monospace;font-size:13px">${a.uid}</td>
+    <td>${a.username}</td>
+    <td><span class="tag ${a.role==='owner'?'tag-owner':'tag-admin'}">${a.role==='owner'?'👑 Owner':'🛡️ Admin'}</span></td>
+    <td style="font-size:12px;color:var(--text-dim)">${a.since}</td>
+    <td>${a.role!=='owner'?`<button class="btn btn-danger" style="font-size:11px;padding:5px 10px" onclick="removeAdmin(${i})">Remove</button>`:'<span style="font-size:12px;color:var(--text-muted)">Owner</span>'}</td>
+  </tr>`).join('');
 }
-async function logoutUserbot(i) {
-  const u = state.userbots[i];
-  if (!confirm(`Log out ${u.phone}? This revokes its session — it will stop running immediately.`)) return;
-  await apiFetch(CONFIG.USERBOT_API_BASE, `/api/userbot/accounts/${u.uid}/${u.slot}`, { method:'DELETE' });
-  state.userbots.splice(i,1);
-  renderUserbots();
-  toast('Account logged out', 'info');
+
+function renderBroadcastHistory() {
+  const el = document.getElementById('broadcast-history');
+  if (!el) return;
+  if (!state.broadcastHistory.length) { el.innerHTML = '<div style="font-size:13px;color:var(--text-dim);text-align:center;padding:20px">No broadcasts yet</div>'; return; }
+  el.innerHTML = state.broadcastHistory.map(b => `
+    <div class="script-item" style="flex-direction:column;align-items:flex-start">
+      <div style="font-size:12px;color:var(--text-dim);margin-bottom:4px">${b.time} • ${b.target} (${b.count} users)</div>
+      <div style="font-size:13px;word-break:break-word">${b.msg}</div>
+    </div>`).join('');
+}
+
+function updateDashboardStats() {
+  // Chart and gauge simulation to keep dashboard alive
+  const cpu = 20 + Math.random() * 40;
+  const mem = 45 + Math.random() * 25;
+  const lat = 50 + Math.random() * 80;
+  if (document.getElementById('cpu-bar')) document.getElementById('cpu-bar').style.width = cpu + '%';
+  if (document.getElementById('mem-bar')) document.getElementById('mem-bar').style.width = mem + '%';
+  if (document.getElementById('cpu-val')) document.getElementById('cpu-val').textContent = Math.round(cpu) + '%';
+  if (document.getElementById('mem-val')) document.getElementById('mem-val').textContent = Math.round(mem) + '%';
+  if (document.getElementById('speed-num')) document.getElementById('speed-num').textContent = Math.round(lat);
+  
+  const secs = Math.floor((Date.now() - state.startTime) / 1000);
+  const h = Math.floor(secs/3600), m = Math.floor((secs%3600)/60), s = secs%60;
+  if (document.getElementById('uptime-display')) {
+      document.getElementById('uptime-display').textContent = [h,m,s].map(x=>String(x).padStart(2,'0')).join(':');
+  }
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Userbot login flow (phone → code → 2FA → done)
+// App Navigation and Setup
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-const loginFlow = { phone: '', pendingId: null, needs2fa: false };
-function resetLoginFlow() {
-  loginFlow.phone = ''; loginFlow.pendingId = null; loginFlow.needs2fa = false;
-  document.getElementById('login-phone').value = '';
-  document.getElementById('login-2fa-pass').value = '';
-  document.querySelectorAll('.otp-box').forEach(b => { b.value=''; b.classList.remove('filled'); });
-  showLoginStep('phone');
+function showApp() { document.getElementById('site-view').style.display = 'none'; document.getElementById('app-view').style.display = 'block'; }
+function showSite() { document.getElementById('app-view').style.display = 'none'; document.getElementById('site-view').style.display = 'block'; }
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function nav(page, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + page).classList.add('active');
+  if (el) el.classList.add('active');
+  if (page === 'subscriptions') renderSubs();
+  if (page === 'admins') renderAdmins();
+  if (page === 'broadcast') renderBroadcastHistory();
 }
+
 function showLoginStep(step) {
   ['phone','code','2fa','done'].forEach(s => {
-    document.getElementById('login-' + s + '-step').style.display = (s===step) ? 'block' : 'none';
+    document.getElementById('login-' + s + '-step').style.display = (s === step) ? 'block' : 'none';
   });
   const stepIndex = { phone: 1, code: 2, '2fa': 3, done: 3 }[step];
   [1,2,3].forEach(n => {
     const el = document.getElementById('lstep-' + n);
-    el.classList.toggle('active', n === stepIndex);
-    el.classList.toggle('done', n < stepIndex);
+    if(el) {
+        el.classList.toggle('active', n === stepIndex);
+        el.classList.toggle('done', n < stepIndex);
+    }
   });
 }
-async function loginSendCode(isResend=false) {
-  const phone = document.getElementById('login-phone').value.trim() || loginFlow.phone;
-  const digits = phone.replace(/[^0-9]/g,'');
-  if (digits.length < 7) { toast('Enter a valid phone number with country code', 'error'); return; }
-  loginFlow.phone = phone;
-  const btn = document.getElementById('btn-send-code');
-  if (btn) { btn.textContent = 'Sending…'; btn.disabled = true; }
-  const data = await apiFetch(CONFIG.USERBOT_API_BASE, '/api/userbot/login/send_code', {
-    method: 'POST', body: JSON.stringify({ phone })
-  });
-  if (btn) { btn.textContent = 'Send Code'; btn.disabled = false; }
-  loginFlow.pendingId = data ? data.pending_id : 'demo';
-  document.getElementById('login-phone-echo').textContent = phone;
-  if (!isResend) showLoginStep('code');
-  else toast('Code re-sent', 'info');
-  document.querySelector('.otp-box').focus();
+
+function resetLoginFlow() {
+  loginFlow.phone = ''; loginFlow.pendingId = null;
+  document.getElementById('login-phone').value = '';
+  if(document.getElementById('login-2fa-pass')) document.getElementById('login-2fa-pass').value = '';
+  document.querySelectorAll('.otp-box').forEach(b => { b.value = ''; b.classList.remove('filled') });
+  showLoginStep('phone');
 }
-async function loginVerifyCode() {
-  const code = getOtpValue();
-  if (code.length < 5) { toast('Enter the full code', 'error'); return; }
-  const data = await apiFetch(CONFIG.USERBOT_API_BASE, '/api/userbot/login/verify_code', {
-    method: 'POST', body: JSON.stringify({ pending_id: loginFlow.pendingId, code })
-  });
-  if (data && data.status === 'needs_2fa') { showLoginStep('2fa'); return; }
-  if (data && data.status === 'error') { toast(data.message || 'Invalid code', 'error'); return; }
-  // demo mode or success
-  if (!CONFIG.USERBOT_API_BASE && Math.random() < 0.3) { showLoginStep('2fa'); return; } // occasionally demo the 2FA path
-  completeLogin(data);
-}
-async function loginVerify2fa() {
-  const password = document.getElementById('login-2fa-pass').value;
-  if (!password) { toast('Enter your 2FA password', 'error'); return; }
-  const data = await apiFetch(CONFIG.USERBOT_API_BASE, '/api/userbot/login/verify_password', {
-    method: 'POST', body: JSON.stringify({ pending_id: loginFlow.pendingId, password })
-  });
-  if (data && data.status === 'error') { toast(data.message || 'Wrong password', 'error'); return; }
-  completeLogin(data);
-}
-function completeLogin(data) {
-  showLoginStep('done');
-  const acct = (data && data.account) || {
-    uid: 2119464081, slot: state.userbots.length, phone: loginFlow.phone,
-    name: 'New Account', status: 'running', uptime: 1, cmds: 0
-  };
-  state.userbots.push(acct);
-  renderUserbots();
-  addLog(`✅ Userbot ${acct.phone} deployed and running`, 'success');
-}
-function getOtpValue() {
-  return Array.from(document.querySelectorAll('.otp-box')).map(b => b.value).join('');
-}
+
 function wireOtpBoxes() {
   const boxes = Array.from(document.querySelectorAll('.otp-box'));
   boxes.forEach((box, idx) => {
@@ -2504,137 +2433,47 @@ function wireOtpBoxes() {
   });
 }
 
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Live inline-button "aliveness": press ripple on every .tg-btn
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-document.addEventListener('click', (e) => {
-  const btn = e.target.closest('.tg-btn');
-  if (!btn) return;
-  const rect = btn.getBoundingClientRect();
-  const ripple = document.createElement('span');
-  const size = Math.max(rect.width, rect.height);
-  ripple.className = 'ripple';
-  ripple.style.width = ripple.style.height = size + 'px';
-  ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
-  ripple.style.top = (e.clientY - rect.top - size/2) + 'px';
-  btn.appendChild(ripple);
-  btn.classList.add('pressed');
-  setTimeout(() => { ripple.remove(); btn.classList.remove('pressed'); }, 450);
-});
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Hero chat — the one orchestrated landing-page animation
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function initHeroChat() {
-  const chat = document.getElementById('hero-chat');
-  if (!chat) return;
-  const script = [
-    { side: 'out', html: 'uploading <code>meme_bot.py</code>…' },
-    { side: 'typing' },
-    { side: 'in', html: '🛡️ Scan passed. No missing packages. Starting your bot now.' },
-    { side: 'in', html: '✅ <b>meme_bot.py</b> is running — PID 41209', kb: [
-      { label: '📋 Logs', cls: '' }, { label: '⏸ Stop', cls: '' }
-    ]},
-    { side: 'out', html: '/host +1 555 010 9284' },
-    { side: 'typing' },
-    { side: 'in', html: '📨 Code sent to your Telegram app. Reply with the 5-digit code.' },
-    { side: 'in', html: '✅ Signed in. Your userbot is now live on this account.', kb: [
-      { label: '📱 Manage', cls: 'teal' }, { label: '🔒 Log out', cls: 'teal' }
-    ]},
-  ];
-  let i = 0;
-  function trimChat() { while (chat.children.length > 5) chat.removeChild(chat.firstChild); }
-  function step() {
-    if (i >= script.length) { i = 0; setTimeout(step, 2600); return; }
-    const s = script[i++];
-    if (s.side === 'typing') {
-      const t = document.createElement('div');
-      t.className = 'tg-typing';
-      t.innerHTML = '<i></i><i></i><i></i>';
-      chat.appendChild(t); trimChat(); chat.scrollTop = chat.scrollHeight;
-      setTimeout(() => { t.remove(); step(); }, 900);
-      return;
-    }
-    const b = document.createElement('div');
-    b.className = 'tg-bubble ' + s.side;
-    b.innerHTML = s.html;
-    chat.appendChild(b);
-    if (s.kb) {
-      const kb = document.createElement('div');
-      kb.className = 'tg-inline-kb cols-2';
-      kb.innerHTML = s.kb.map(k => `<div class="tg-btn ${k.cls}">${k.label}</div>`).join('');
-      chat.appendChild(kb);
-    }
-    trimChat();
-    chat.scrollTop = chat.scrollHeight;
-    setTimeout(step, s.side === 'out' ? 700 : 1500);
-  }
-  step();
-}
-
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-// Hero stat counters
-// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-function countUp(id, target, suffix='') {
-  const el = document.getElementById(id);
+function renderWeeklyChart() {
+  const el = document.getElementById('weekly-chart');
   if (!el) return;
-  let cur = 0;
-  const step = Math.max(1, Math.round(target / 40));
-  const t = setInterval(() => {
-    cur = Math.min(target, cur + step);
-    el.textContent = cur.toLocaleString() + suffix;
-    if (cur >= target) clearInterval(t);
-  }, 25);
-}
-function animateHeroStats() {
-  countUp('hs-bots', state.scripts.length + 51);
-  countUp('hs-userbots', state.userbots.length + 34);
-  countUp('hs-uptime', 99, '.9%');
+  const vals = [62, 85, 45, 93, 78, 55, 88];
+  el.innerHTML = vals.map(v => `
+    <div class="chart-bar-wrap">
+      <div class="chart-bar-bg" style="height:100px">
+        <div class="chart-bar-fill" style="height:0%;background:linear-gradient(0deg,var(--accent),var(--accent2))" data-target="${v}"></div>
+      </div>
+    </div>`).join('');
+  setTimeout(() => {
+    el.querySelectorAll('.chart-bar-fill').forEach(b => {
+      b.style.height = b.dataset.target + '%';
+    });
+  }, 100);
 }
 
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 // Init
 // ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 function init() {
-  renderScripts();
-  renderFiles();
-  renderUserbots();
+  fetchAllData();
+  
+  // Start automated background tasks
+  setInterval(fetchAllData, 8000); 
+  setInterval(updateDashboardStats, 2000);
+  
+  // Init UI features
   wireOtpBoxes();
-  initHeroChat();
-  animateHeroStats();
-
-  // Show dashboard directly if linked to with #dashboard, otherwise land on the site
+  renderWeeklyChart();
+  
   if (location.hash === '#dashboard') showApp(); else showSite();
-
-  // Try pulling real data once; silently keeps demo data if no backend is configured
-  refreshUserbotsFromApi().then(renderUserbots);
-
-  // Initial logs
-  const initLogs = [
-    ['🤖 SID Hosting Bot started', 'success'],
-    ['Flask keep-alive server running on :8080', 'info'],
-    ['Database initialized — loaded 247 users, 12 subscriptions', 'info'],
-    ['3 scripts running from previous session', 'success'],
-    ['Malware scanner active', 'success'],
-    ['Polling started...', 'dim'],
-  ];
-  initLogs.forEach(([m,l], i) => setTimeout(() => addLog(m, l), i * 300));
-
-  // Simulation ticks
-  setInterval(updateSystemStats, 3000);
-  setInterval(tickLog, 4500);
-  setInterval(updateUptime, 1000);
-  setInterval(() => {
-    if (document.getElementById('page-files').classList.contains('active')) renderFiles();
-  }, 5000);
 }
 
 document.addEventListener('DOMContentLoaded', init);
 
-// Close modals on background click
+// Modal Background Close
 document.querySelectorAll('.modal-overlay').forEach(overlay => {
   overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('open'); });
 });
+
 </script>
 </body>
 </html>
