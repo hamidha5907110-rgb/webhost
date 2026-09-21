@@ -59,18 +59,18 @@ async function fetchAllData() {
 }
 
 // --- Bot Management (Scripts) ---
-function handleFileSelect(input, isMain=false) {
+window.handleFileSelect = function(input, isMain=false) {
   if (input.files[0]) (isMain ? document.getElementById('upload-zone-sub') : document.getElementById('file-name-display')).textContent = '📄 ' + input.files[0].name;
-}
-function handleDrop(e) {
+};
+window.handleDrop = function(e) {
   e.preventDefault();
   document.getElementById('main-drop-zone').classList.remove('drag-over');
   if (e.dataTransfer.files[0]) {
     document.getElementById('upload-zone-sub').textContent = '📄 ' + e.dataTransfer.files[0].name;
     document.getElementById('main-file-picker').files = e.dataTransfer.files;
   }
-}
-async function uploadScript(run = true) {
+};
+window.uploadScript = async function(run = true) {
   const fileInput = document.getElementById('main-file-picker') || document.getElementById('file-picker');
   if (!fileInput.files[0]) return toast('Please select a file', 'error');
 
@@ -87,18 +87,18 @@ async function uploadScript(run = true) {
     if (run) setTimeout(async () => { await fetchAllData(); const s = state.scripts.find(x=>x.name===fileInput.files[0].name); if(s) startScript(state.scripts.indexOf(s)); }, 500);
     else fetchAllData();
   }
-}
-async function startScript(i) { await apiFetch(`/api/scripts/${state.scripts[i].id}/start`, { method: 'POST' }); fetchAllData(); toast('Starting...', 'info'); }
-async function stopScript(i) { await apiFetch(`/api/scripts/${state.scripts[i].id}/stop`, { method: 'POST' }); fetchAllData(); toast('Stopped', 'warn'); }
-async function deleteScript(i) {
+};
+window.startScript = async function(i) { await apiFetch(`/api/scripts/${state.scripts[i].id}/start`, { method: 'POST' }); fetchAllData(); toast('Starting...', 'info'); };
+window.stopScript = async function(i) { await apiFetch(`/api/scripts/${state.scripts[i].id}/stop`, { method: 'POST' }); fetchAllData(); toast('Stopped', 'warn'); };
+window.deleteScript = async function(i) {
   if (state.scripts[i].status === 'running') return toast('Stop first', 'error');
   if (await apiFetch(`/api/scripts/${state.scripts[i].id}`, { method: 'DELETE' })) { toast('Deleted', 'info'); fetchAllData(); }
-}
-function runAllScripts() { state.scripts.forEach((s, i) => { if (s.status !== 'running') startScript(i); }); }
+};
+window.runAllScripts = function() { state.scripts.forEach((s, i) => { if (s.status !== 'running') startScript(i); }); };
 
 // --- Userbot Auth Flow ---
 const loginFlow = { phone: '', pendingId: null };
-async function loginSendCode(resend = false) {
+window.loginSendCode = async function(resend = false) {
   const p = document.getElementById('login-phone').value.trim() || loginFlow.phone;
   if (p.length < 7) return toast('Invalid phone', 'error');
   loginFlow.phone = p;
@@ -108,49 +108,57 @@ async function loginSendCode(resend = false) {
   if (btn) { btn.textContent = 'Send Code'; btn.disabled = false; }
   
   if (res) { loginFlow.pendingId = res.pending_id; document.getElementById('login-phone-echo').textContent = p; showLoginStep('code'); document.querySelector('.otp-box').focus(); if(resend) toast('Resent','info'); }
-}
-async function loginVerifyCode() {
+};
+window.loginVerifyCode = async function() {
   const c = Array.from(document.querySelectorAll('.otp-box')).map(b => b.value).join('');
   if (c.length < 5) return toast('Enter full code', 'error');
   const res = await apiFetch('/api/userbot/login/verify_code', { method: 'POST', body: JSON.stringify({ pending_id: loginFlow.pendingId, code: c }) });
   if (res && res.status === 'needs_2fa') showLoginStep('2fa'); else if (res) { showLoginStep('done'); fetchAllData(); }
-}
-async function loginVerify2fa() {
+};
+window.loginVerify2fa = async function() {
   const p = document.getElementById('login-2fa-pass').value;
   if (!p) return toast('Enter password', 'error');
   const res = await apiFetch('/api/userbot/login/verify_password', { method: 'POST', body: JSON.stringify({ pending_id: loginFlow.pendingId, password: p }) });
   if (res) { showLoginStep('done'); fetchAllData(); }
-}
-async function logoutUserbot(i) {
+};
+window.logoutUserbot = async function(i) {
   if (confirm(`Log out ${state.userbots[i].phone}?`) && await apiFetch(`/api/userbot/accounts/${state.userbots[i].uid}/${state.userbots[i].slot}`, { method: 'DELETE' })) { toast('Logged out', 'info'); fetchAllData(); }
-}
+};
+window.startUserbot = async function(i) { toast("Starting userbot...", "info"); if(!state.userbots[i].uid) return; await apiFetch(`/api/userbot/accounts/${state.userbots[i].uid}/${state.userbots[i].slot}/start`, {method: 'POST'}); await fetchAllData(); };
+window.stopUserbot = async function(i, restart=false) { toast(`${restart ? "Restarting" : "Stopping"} userbot...`, "warn"); if(!state.userbots[i].uid) return; await apiFetch(`/api/userbot/accounts/${state.userbots[i].uid}/${state.userbots[i].slot}/${restart ? 'restart' : 'stop'}`, {method: 'POST'}); await fetchAllData(); };
 
 // --- Admin Controls ---
-async function addSubscription() {
+window.addSubscription = async function() {
   const uid = parseInt(document.getElementById('sub-uid').value), days = parseInt(document.getElementById('sub-days').value);
   if (!uid || !days) return toast('Invalid', 'error');
   if (await apiFetch('/api/subs', { method: 'POST', body: JSON.stringify({ uid, days }) })) { toast('Sub activated', 'success'); closeModal('sub-modal'); fetchAllData(); }
-}
-async function extendSub(i) { if (await apiFetch(`/api/subs/${state.subscriptions[i].uid}/extend`, { method: 'POST' })) { toast('Extended +30d', 'success'); fetchAllData(); } }
-async function removeSub(i) { if (await apiFetch(`/api/subs/${state.subscriptions[i].uid}`, { method: 'DELETE' })) { toast('Removed', 'info'); fetchAllData(); } }
-async function addAdmin() {
+};
+window.extendSub = async function(i) { if (await apiFetch(`/api/subs/${state.subscriptions[i].uid}/extend`, { method: 'POST' })) { toast('Extended +30d', 'success'); fetchAllData(); } };
+window.removeSub = async function(i) { if (await apiFetch(`/api/subs/${state.subscriptions[i].uid}`, { method: 'DELETE' })) { toast('Removed', 'info'); fetchAllData(); } };
+window.checkSubModal = function() {
+  const uid = prompt('Enter User ID to check:'); if (!uid) return;
+  const found = state.subscriptions.find(s => String(s.uid) === uid);
+  if (found) toast(`User ${uid}: ${found.daysLeft > 0 ? found.daysLeft + ' days left' : 'Expired'}`, found.daysLeft > 0 ? 'success' : 'error');
+  else toast(`No subscription found for ${uid}`, 'warn');
+};
+window.addAdmin = async function() {
   const uid = parseInt(document.getElementById('admin-uid').value);
   if (uid && await apiFetch('/api/admins', { method: 'POST', body: JSON.stringify({ uid }) })) { toast('Admin Added', 'success'); closeModal('admin-modal'); fetchAllData(); }
-}
-async function removeAdmin(i) { if (await apiFetch(`/api/admins/${state.admins[i].uid}`, { method: 'DELETE' })) { toast('Admin removed', 'info'); fetchAllData(); } }
-async function sendBroadcast() {
+};
+window.removeAdmin = async function(i) { if (await apiFetch(`/api/admins/${state.admins[i].uid}`, { method: 'DELETE' })) { toast('Admin removed', 'info'); fetchAllData(); } };
+window.sendBroadcast = async function() {
   const msg = document.getElementById('broadcast-msg').value, target = document.getElementById('broadcast-target').value;
   if (!msg) return toast('Empty message', 'error');
   if (await apiFetch('/api/broadcast', { method: 'POST', body: JSON.stringify({ msg, target }) })) { toast('Broadcast sent', 'success'); document.getElementById('broadcast-msg').value=''; fetchAllData(); }
-}
-async function toggleBotLock() { if (await apiFetch('/api/lock', { method: 'POST' })) fetchAllData(); }
-async function sendCmd() {
+};
+window.toggleBotLock = async function() { if (await apiFetch('/api/lock', { method: 'POST' })) fetchAllData(); };
+window.sendCmd = async function() {
   const cmd = document.getElementById('cmd-input').value.trim();
   if (!cmd) return;
   if (await apiFetch('/api/command', { method: 'POST', body: JSON.stringify({ cmd }) })) { document.getElementById('cmd-log').innerHTML += `<div class="log-info">[${ts()}] $ ${cmd}</div>`; document.getElementById('cmd-input').value = ''; }
-}
-function quickCmd(c) { document.getElementById('cmd-input').value = c; sendCmd(); }
-async function clearLogs() { if (await apiFetch('/api/logs/clear', { method: 'POST' })) { state.logEntries = []; document.getElementById('main-log').innerHTML = ''; toast('Cleared', 'info'); } }
+};
+window.quickCmd = function(c) { document.getElementById('cmd-input').value = c; window.sendCmd(); };
+window.clearLogs = async function() { if (await apiFetch('/api/logs/clear', { method: 'POST' })) { state.logEntries = []; document.getElementById('main-log').innerHTML = ''; toast('Cleared', 'info'); } };
 
 // --- UI Renderers ---
 function ts() { return new Date().toTimeString().slice(0, 8); }
@@ -179,7 +187,7 @@ function renderUserbots() {
   document.getElementById('ub-stat-running').textContent = state.userbots.filter(u => u.status === 'running').length;
   document.getElementById('ub-stat-cmds').textContent = state.userbots.reduce((a,u) => a+(u.cmds||0), 0);
   if (!state.userbots.length) { l.innerHTML = `<div style="text-align:center;padding:40px;color:var(--text-dim)">No active accounts.</div>`; return; }
-  l.innerHTML = state.userbots.map((u, i) => `<div class="userbot-card"><div class="userbot-avatar">${(u.name||'U')[0].toUpperCase()}</div><div class="userbot-info"><div class="userbot-phone">${u.phone}</div><div class="userbot-meta"><span class="script-status-dot ${u.status==='running'?'dot-running':'dot-stopped'}" style="display:inline-block;width:7px;height:7px;margin-right:5px"></span>${u.status === 'running' ? 'Online' : 'Stopped'} • ${u.cmds||0} commands</div></div><div class="userbot-actions"><button class="btn-icon del" onclick="logoutUserbot(${i})">🗑</button></div></div>`).join('');
+  l.innerHTML = state.userbots.map((u, i) => `<div class="userbot-card"><div class="userbot-avatar">${(u.name||'U')[0].toUpperCase()}</div><div class="userbot-info"><div class="userbot-phone">${u.phone}</div><div class="userbot-meta"><span class="script-status-dot ${u.status==='running'?'dot-running':'dot-stopped'}" style="display:inline-block;width:7px;height:7px;margin-right:5px"></span>${u.status === 'running' ? 'Online' : 'Stopped'} • ${u.cmds||0} commands</div></div><div class="userbot-actions">${u.status !== 'running' ? `<button class="btn-icon run" onclick="startUserbot(${i})">▶</button>` : `<button class="btn-icon stop" onclick="stopUserbot(${i},true)">↻</button><button class="btn-icon stop" onclick="stopUserbot(${i})">■</button>`}<button class="btn-icon del" onclick="logoutUserbot(${i})">🗑</button></div></div>`).join('');
 }
 function renderSubs() {
   const tb = document.getElementById('sub-tbody'); if (!tb) return;
@@ -210,26 +218,26 @@ function renderMainLog() {
     el.scrollTop = el.scrollHeight;
   });
 }
-function pauseLogs() { state.logsPaused = !state.logsPaused; document.getElementById('pause-btn').textContent = state.logsPaused ? '▶ Resume' : '⏸ Pause'; document.getElementById('live-indicator').textContent = state.logsPaused ? '⏸ PAUSED' : '● LIVE'; }
-function filterLog(type) {
+window.pauseLogs = function() { state.logsPaused = !state.logsPaused; document.getElementById('pause-btn').textContent = state.logsPaused ? '▶ Resume' : '⏸ Pause'; document.getElementById('live-indicator').textContent = state.logsPaused ? '⏸ PAUSED' : '● LIVE'; };
+window.filterLog = function(type) {
   const el = document.getElementById('main-log');
   if (!el) return;
   const filtered = type === 'all' ? state.logEntries : state.logEntries.filter(e => e.level === type);
   el.innerHTML = filtered.map(e => `<div class="${e.cls}">[${e.time}] ${e.msg}</div>`).join('');
-}
+};
 
 // --- App Control ---
-function showApp() { document.getElementById('site-view').style.display = 'none'; document.getElementById('app-view').style.display = 'block'; }
-function showSite() { document.getElementById('app-view').style.display = 'none'; document.getElementById('site-view').style.display = 'block'; }
-function openModal(id) { document.getElementById(id).classList.add('open'); }
-function closeModal(id) { document.getElementById(id).classList.remove('open'); }
-function nav(page, el) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); document.getElementById('page-' + page).classList.add('active'); if (el) el.classList.add('active'); }
-function showLoginStep(step) {
+window.showApp = function() { document.getElementById('site-view').style.display = 'none'; document.getElementById('app-view').style.display = 'block'; };
+window.showSite = function() { document.getElementById('app-view').style.display = 'none'; document.getElementById('site-view').style.display = 'block'; };
+window.openModal = function(id) { document.getElementById(id).classList.add('open'); };
+window.closeModal = function(id) { document.getElementById(id).classList.remove('open'); };
+window.nav = function(page, el) { document.querySelectorAll('.page').forEach(p => p.classList.remove('active')); document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active')); document.getElementById('page-' + page).classList.add('active'); if (el) el.classList.add('active'); };
+window.showLoginStep = function(step) {
   ['phone','code','2fa','done'].forEach(s => document.getElementById('login-' + s + '-step').style.display = (s === step) ? 'block' : 'none');
   const stepIdx = { phone: 1, code: 2, '2fa': 3, done: 3 }[step];
   [1,2,3].forEach(n => { const e = document.getElementById('lstep-' + n); if(e) { e.classList.toggle('active', n === stepIdx); e.classList.toggle('done', n < stepIdx); } });
-}
-function resetLoginFlow() { loginFlow.phone = ''; loginFlow.pendingId = null; document.getElementById('login-phone').value = ''; document.querySelectorAll('.otp-box').forEach(b => { b.value = ''; b.classList.remove('filled') }); showLoginStep('phone'); }
+};
+window.resetLoginFlow = function() { loginFlow.phone = ''; loginFlow.pendingId = null; document.getElementById('login-phone').value = ''; document.querySelectorAll('.otp-box').forEach(b => { b.value = ''; b.classList.remove('filled') }); showLoginStep('phone'); };
 
 function init() {
   fetchAllData();
